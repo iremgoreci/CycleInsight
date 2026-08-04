@@ -1,8 +1,7 @@
-from sqlalchemy import DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime
-
 from app.db.database import Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import date, datetime
+from sqlalchemy import String, DateTime, Date
 
 class User(Base):
     __tablename__ = "users"
@@ -11,13 +10,17 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    date_of_birth: Mapped[date] = mapped_column(Date, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow
+        default=datetime.utcnow,
+        nullable=False
     )
-
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
-        onupdate=datetime.utcnow
+        onupdate=datetime.utcnow,
+        nullable=False
     )
+    cycles: Mapped[list["Cycle"]] = relationship(back_populates="user")
+    daily_logs: Mapped[list["DailyLog"]] = relationship(back_populates="user")
