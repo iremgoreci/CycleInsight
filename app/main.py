@@ -1,23 +1,15 @@
 from fastapi import FastAPI
-from app.schemas.user import UserCreate
+
+from app.api.routes.user import router as user_router
 
 app = FastAPI()
 
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to CycleInsight API"}
-
-
-@app.post("/auth/register")
-def register(user: UserCreate):
-    print(user)
-    print(type(user))
-    print(user.first_name)
-
-    print(user.model_dump())
-    print(type(user.model_dump()))
-    
     return {
-        "message": "User received"
+        "message": "Welcome to CycleInsight API"
     }
+
+
+app.include_router(user_router)
