@@ -16,3 +16,15 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     password: Optional[str] = None
     date_of_birth: Optional[date] = None
+
+
+class UserResponse(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: EmailStr
+    date_of_birth: date
+
+    model_config = {
+        "from_attributes": True
+    }
