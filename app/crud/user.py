@@ -3,6 +3,7 @@ from app.core.security import hash_password
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 
+
 def create_user(db: Session, user_data: UserCreate) -> User:
     hashed_password = hash_password(user_data.password)
 
@@ -20,13 +21,22 @@ def create_user(db: Session, user_data: UserCreate) -> User:
 
     return new_user
 
+
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(
         User.id == user_id
     ).first()
 
+
+def get_user_by_email(db: Session, user_email: str):
+    return db.query(User).filter(
+        User.email == user_email
+    ).first()
+
+
 def get_users(db: Session):
     return db.query(User).all()
+
 
 def update_user(db: Session, user_id: int, user_data: UserUpdate):
     user = get_user(db, user_id)
@@ -53,6 +63,7 @@ def update_user(db: Session, user_id: int, user_data: UserUpdate):
     db.refresh(user)
 
     return user
+
 
 def delete_user(db: Session, user_id: int):
     user = get_user(db, user_id)

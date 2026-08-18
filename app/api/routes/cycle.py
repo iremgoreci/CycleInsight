@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.crud.cycle import create_cycle, get_cycle, get_cycles, update_cycle, delete_cycle
 from app.schemas.cycle import CycleCreate, CycleUpdate, CycleResponse
+from app.core.dependencies import get_current_user
+from app.models.user import User
+
 
 router = APIRouter()
 
@@ -11,27 +14,38 @@ router = APIRouter()
 @router.post("/cycles", response_model=CycleResponse)
 def create_new_cycle(
     cycle: CycleCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     return create_cycle(
         db=db,
-        user_id=4,
+        user_id=current_user.id,
         cycle_data=cycle
     )
 
 
 @router.get("/cycles", response_model=list[CycleResponse])
 def read_cycles(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    return get_cycles(db)
+    return get_cycles(
+        db=db,
+        user_id=current_user.id
+    )
+
 
 @router.get("/cycles/{cycle_id}", response_model=CycleResponse)
 def read_cycle(
     cycle_id: int,
-    db: Session = Depends(get_db)    
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    cycle = get_cycle(db, cycle_id)
+    cycle = get_cycle(
+        db,
+        cycle_id,
+        current_user.id
+    )
 
     if cycle is None:
         raise HTTPException(
@@ -41,14 +55,14 @@ def read_cycle(
 
     return cycle
 
-
 @router.put("/cycles/{cycle_id}", response_model=CycleResponse)
 def edit_cycle(
     cycle_id: int,
     cycle: CycleUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    updated_cycle = update_cycle(db, cycle_id, cycle)
+    updated_cycle = update_cycle(db, cycle_id, cycle, current_user.id)
 
     if updated_cycle is None:
         raise HTTPException(
@@ -62,9 +76,10 @@ def edit_cycle(
 @router.delete("/cycles/{cycle_id}")
 def remove_cycle(
     cycle_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    deleted_cycle = delete_cycle(db, cycle_id)
+    deleted_cycle = delete_cycle(db, cycle_id, current_user.id)
 
     if deleted_cycle is None:
         raise HTTPException(

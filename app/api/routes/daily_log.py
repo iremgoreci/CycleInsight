@@ -4,18 +4,21 @@ from app.crud.daily_log import create_daily_log, get_daily_log, get_daily_logs, 
 from app.schemas.daily_log import DailyLogCreate, DailyLogUpdate, DailyLogResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from app.core.dependencies import get_current_user
+from app.models.user import User
 
 router = APIRouter()
 
 @router.post("/daily_logs", response_model=DailyLogResponse)
 def create_new_daily_log(
     daily_log: DailyLogCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     try:
         return create_daily_log(
             db=db,
-            user_id=4,
+            user_id=current_user.id,
             daily_log_data=daily_log
         )
 
@@ -30,17 +33,21 @@ def create_new_daily_log(
 
 @router.get("/daily_logs", response_model=list[DailyLogResponse])
 def read_daily_logs(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    return get_daily_logs(db)
-
+    return get_daily_logs(
+        db=db,
+        user_id=current_user.id
+    )
 
 @router.get("/daily_logs/{daily_log_id}", response_model=DailyLogResponse)
 def read_daily_log(
     daily_log_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    daily_log = get_daily_log(db, daily_log_id)
+    daily_log = get_daily_log(db, daily_log_id, current_user.id)
 
     if daily_log is None: 
         raise HTTPException(
@@ -55,9 +62,10 @@ def read_daily_log(
 def edit_daily_log(
     daily_log_id: int,
     daily_log: DailyLogUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    updated_daily_log = update_daily_log(db, daily_log_id, daily_log)
+    updated_daily_log = update_daily_log(db, daily_log_id, daily_log, current_user.id)
 
     if updated_daily_log is None:
         raise HTTPException(
@@ -71,9 +79,10 @@ def edit_daily_log(
 @router.delete("/daily_logs/{daily_log_id}")
 def remove_daily_log(
     daily_log_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    deleted_daily_log = delete_daily_log(db, daily_log_id)
+    deleted_daily_log = delete_daily_log(db, daily_log_id, current_user.id)
 
     if deleted_daily_log is None:
         raise HTTPException(

@@ -3,7 +3,6 @@ from app.models.cycle import Cycle
 from app.schemas.cycle import CycleCreate, CycleUpdate
 
 
-
 def create_cycle(db: Session, user_id: int, cycle_data: CycleCreate):
     new_cycle = Cycle(
         user_id=user_id,
@@ -17,16 +16,17 @@ def create_cycle(db: Session, user_id: int, cycle_data: CycleCreate):
 
     return new_cycle
 
-def get_cycle(db: Session, cycle_id: int):
+def get_cycle(db: Session, cycle_id: int, user_id: int):
     return db.query(Cycle).filter(
-        Cycle.id == cycle_id
+        Cycle.id == cycle_id,
+        Cycle.user_id == user_id
     ).first()
 
 def get_cycles(db: Session):
     return db.query(Cycle).all()
 
-def update_cycle(db: Session, cycle_id: int, cycle_data: CycleUpdate):
-    cycle = get_cycle(db, cycle_id)
+def update_cycle(db: Session, cycle_id: int, cycle_data: CycleUpdate, user_id: int):
+    cycle = get_cycle(db, cycle_id, user_id)
 
     if cycle is None:
         return None
@@ -42,8 +42,8 @@ def update_cycle(db: Session, cycle_id: int, cycle_data: CycleUpdate):
 
     return cycle
 
-def delete_cycle(db: Session, cycle_id: int):
-    cycle = get_cycle(db, cycle_id)
+def delete_cycle(db: Session, cycle_id: int, user_id: int):
+    cycle = get_cycle(db, cycle_id, user_id)
 
     if cycle is None:
         return None

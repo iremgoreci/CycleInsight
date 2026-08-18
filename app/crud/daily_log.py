@@ -22,16 +22,19 @@ def create_daily_log(db: Session, user_id: int, daily_log_data: DailyLogCreate):
     return new_daily_log
 
 
-def get_daily_log(db: Session, daily_log_id: int):
+def get_daily_log(db: Session, daily_log_id: int, user_id: int):
     return db.query(DailyLog).filter(
-        DailyLog.id == daily_log_id
+        DailyLog.id == daily_log_id,
+        DailyLog.user_id == user_id
     ).first()
 
-def get_daily_logs(db: Session):
-    return db.query(DailyLog).all()
+def get_daily_logs(db: Session, user_id: int):
+    return db.query(DailyLog).filter(
+        DailyLog.user_id == user_id
+    ).all()
 
-def update_daily_log(db: Session, daily_log_id: int, daily_log_data: DailyLogUpdate):
-    daily_log = get_daily_log(db, daily_log_id)
+def update_daily_log(db: Session, daily_log_id: int, daily_log_data: DailyLogUpdate, user_id: int):
+    daily_log = get_daily_log(db, daily_log_id, user_id)
     
     if daily_log is None:
         return None
@@ -62,8 +65,8 @@ def update_daily_log(db: Session, daily_log_id: int, daily_log_data: DailyLogUpd
 
     return daily_log
 
-def delete_daily_log(db: Session, daily_log_id: int):
-    daily_log = get_daily_log(db, daily_log_id)
+def delete_daily_log(db: Session, daily_log_id: int, user_id: int):
+    daily_log = get_daily_log(db, daily_log_id, user_id)
 
     if daily_log is None:
         return None
