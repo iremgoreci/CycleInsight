@@ -1,7 +1,9 @@
-from app.db.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date, datetime
 from sqlalchemy import String, DateTime, Date
+
+from app.db.database import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -22,5 +24,11 @@ class User(Base):
         onupdate=datetime.utcnow,
         nullable=False
     )
-    cycles: Mapped[list["Cycle"]] = relationship(back_populates="user")
-    daily_logs: Mapped[list["DailyLog"]] = relationship(back_populates="user")
+    cycles: Mapped[list["Cycle"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+    daily_logs: Mapped[list["DailyLog"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )

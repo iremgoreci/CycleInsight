@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.db.dependencies import get_db
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
+
+from app.db.dependencies import get_db
 from app.crud.cycle import create_cycle, get_cycle, get_cycles, update_cycle, delete_cycle
 from app.schemas.cycle import CycleCreate, CycleUpdate, CycleResponse
 from app.core.dependencies import get_current_user
 from app.models.user import User
-
 
 router = APIRouter()
 
@@ -55,6 +54,7 @@ def read_cycle(
 
     return cycle
 
+
 @router.put("/cycles/{cycle_id}", response_model=CycleResponse)
 def edit_cycle(
     cycle_id: int,
@@ -62,7 +62,19 @@ def edit_cycle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    updated_cycle = update_cycle(db, cycle_id, cycle, current_user.id)
+    try:
+        updated_cycle = update_cycle(
+            db,
+            cycle_id,
+            cycle,
+            current_user.id
+        )
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
     if updated_cycle is None:
         raise HTTPException(

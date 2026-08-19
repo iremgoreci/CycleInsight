@@ -9,6 +9,7 @@ class UserCreate(BaseModel):
     password: str
     date_of_birth: date
 
+
 class UserUpdate(BaseModel):
     first_name: str | None = None
     last_name: str | None = None

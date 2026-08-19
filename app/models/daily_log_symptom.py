@@ -1,7 +1,7 @@
-from app.db.database import Base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.db.database import Base
 from app.models.daily_log import DailyLog
 from app.models.symptom_type import SymptomType
 

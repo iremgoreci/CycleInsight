@@ -3,10 +3,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.db.dependencies import get_db
-from app.crud.user import get_user_by_email
+from app.crud.user import get_user_by_email,update_user, delete_user
 from app.core.security import verify_password, create_access_token
 from app.core.dependencies import get_current_user
-from app.schemas.user import UserResponse
+from app.schemas.user import UserResponse, UserUpdate
 from app.models.user import User
 
 router = APIRouter()
@@ -41,3 +41,28 @@ def get_me(
     current_user: User = Depends(get_current_user)
 ):
     return current_user
+
+
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    user_data: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    updated_user = update_user(
+        db,
+        current_user.id,
+        user_data
+    )
+
+    return updated_user
+
+
+@router.delete("/me")
+def delete_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return {
+        "message": "User deleted successfully."
+    }

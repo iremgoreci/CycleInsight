@@ -1,8 +1,10 @@
-from app.db.database import Base
 from sqlalchemy import ForeignKey, UniqueConstraint, Date, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date, datetime
+
+from app.db.database import Base
 from app.models.user import User
+
 
 class DailyLog(Base):
     __tablename__ = "daily_logs"
@@ -33,4 +35,7 @@ class DailyLog(Base):
         nullable=False
         )
     user: Mapped["User"] = relationship(back_populates="daily_logs")
-    daily_log_symptoms: Mapped[list["DailyLogSymptom"]] = relationship(back_populates="daily_log")
+    daily_log_symptoms: Mapped[list["DailyLogSymptom"]] = relationship(
+        back_populates="daily_log",
+        cascade="all, delete-orphan"
+    )

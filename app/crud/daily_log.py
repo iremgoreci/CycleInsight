@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
+
 from app.models.daily_log import DailyLog
 from app.schemas.daily_log import DailyLogCreate, DailyLogUpdate
-
 
 
 def create_daily_log(db: Session, user_id: int, daily_log_data: DailyLogCreate):
@@ -28,10 +28,12 @@ def get_daily_log(db: Session, daily_log_id: int, user_id: int):
         DailyLog.user_id == user_id
     ).first()
 
+
 def get_daily_logs(db: Session, user_id: int):
     return db.query(DailyLog).filter(
         DailyLog.user_id == user_id
     ).all()
+
 
 def update_daily_log(db: Session, daily_log_id: int, daily_log_data: DailyLogUpdate, user_id: int):
     daily_log = get_daily_log(db, daily_log_id, user_id)
@@ -64,6 +66,7 @@ def update_daily_log(db: Session, daily_log_id: int, daily_log_data: DailyLogUpd
     db.refresh(daily_log)
 
     return daily_log
+
 
 def delete_daily_log(db: Session, daily_log_id: int, user_id: int):
     daily_log = get_daily_log(db, daily_log_id, user_id)

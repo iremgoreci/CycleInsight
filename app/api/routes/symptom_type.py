@@ -1,8 +1,9 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from app.db.dependencies import get_db
 from app.crud.symptom_type import get_symptom_type, get_symptom_types
 from app.schemas.symptom_type import SymptomTypeResponse
-from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter()
 

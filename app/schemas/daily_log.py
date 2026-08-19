@@ -2,8 +2,6 @@ from pydantic import BaseModel, Field
 from datetime import date
 
 
-
-
 class DailyLogCreate(BaseModel):
     log_date: date
     bleeding_level: int = Field(ge=0, le=5)

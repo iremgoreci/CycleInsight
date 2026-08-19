@@ -1,13 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.db.dependencies import get_db
-from app.crud.daily_log import create_daily_log, get_daily_log, get_daily_logs, update_daily_log, delete_daily_log
-from app.schemas.daily_log import DailyLogCreate, DailyLogUpdate, DailyLogResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+
+from app.db.dependencies import get_db
+from app.crud.daily_log import (
+    create_daily_log, 
+    get_daily_log, 
+    get_daily_logs, 
+    update_daily_log, 
+    delete_daily_log
+)
+from app.schemas.daily_log import DailyLogCreate, DailyLogUpdate, DailyLogResponse
 from app.core.dependencies import get_current_user
 from app.models.user import User
 
 router = APIRouter()
+
 
 @router.post("/daily_logs", response_model=DailyLogResponse)
 def create_new_daily_log(
@@ -40,6 +48,7 @@ def read_daily_logs(
         db=db,
         user_id=current_user.id
     )
+
 
 @router.get("/daily_logs/{daily_log_id}", response_model=DailyLogResponse)
 def read_daily_log(

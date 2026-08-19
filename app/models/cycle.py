@@ -1,8 +1,10 @@
-from app.db.database import Base
 from sqlalchemy import ForeignKey, DateTime, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date, datetime
+
+from app.db.database import Base
 from app.models.user import User
+
 
 class Cycle(Base):
     __tablename__ = "cycles"
