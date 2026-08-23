@@ -22,7 +22,7 @@ class DailyLog(Base):
     pain_level: Mapped[int] = mapped_column()
     sleep_quality: Mapped[int] = mapped_column()
     stress_level: Mapped[int] = mapped_column()
-    notes: Mapped[str] = mapped_column(Text)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow, 

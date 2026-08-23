@@ -25,8 +25,10 @@ def get_cycle(db: Session, cycle_id: int, user_id: int):
     ).first()
 
 
-def get_cycles(db: Session):
-    return db.query(Cycle).all()
+def get_cycles(db: Session, user_id: int):
+    return db.query(Cycle).filter(
+        Cycle.user_id == user_id
+    ).all()
 
 
 def update_cycle(

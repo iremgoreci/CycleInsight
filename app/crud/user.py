@@ -35,10 +35,6 @@ def get_user_by_email(db: Session, user_email: str):
     ).first()
 
 
-def get_users(db: Session):
-    return db.query(User).all()
-
-
 def update_user(db: Session, user_id: int, user_data: UserUpdate):
     user = get_user(db, user_id)
 
