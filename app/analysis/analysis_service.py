@@ -225,10 +225,9 @@ def analyze_user_data(
             "range": calculate_cycle_range(
                 cycle_lengths
             ),
-            "consecutive_differences":
-                calculate_consecutive_cycle_differences(
-                    cycle_lengths
-                ),
+            "consecutive_differences": calculate_consecutive_cycle_differences(
+                cycle_lengths
+            ),
             "regularity": assess_cycle_regularity(
                 cycle_lengths,
                 age,

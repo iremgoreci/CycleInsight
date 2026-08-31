@@ -70,29 +70,48 @@ def calculate_prediction_confidence(
     Calculate prediction confidence based on the amount
     and consistency of available cycle data.
     """
-    if len(cycle_lengths) < 3:
+
+    cycle_count = len(cycle_lengths)
+
+    if cycle_count == 0:
         return {
             "score": 0.0,
             "tier": "low",
         }
 
-    cycle_count = len(cycle_lengths)
+    # Data quantity
 
-    cycle_range = max(cycle_lengths) - min(cycle_lengths)
+    if cycle_count >= 6:
+        quantity_score = 0.5
+    elif cycle_count >= 3:
+        quantity_score = 0.3
+    else:
+        quantity_score = 0.1
 
-    if cycle_count >= 6 and cycle_range <= 3:
-        return {
-            "score": 0.9,
-            "tier": "high",
-        }
+    # Consistency
 
-    if cycle_count >= 3 and cycle_range <= 7:
-        return {
-            "score": 0.6,
-            "tier": "medium",
-        }
+    if cycle_count < 2:
+        consistency_score = 0.0
+    else:
+        cycle_range = max(cycle_lengths) - min(cycle_lengths)
+
+        if cycle_range <= 3:
+            consistency_score = 0.5
+        elif cycle_range <= 7:
+            consistency_score = 0.3
+        else:
+            consistency_score = 0.1
+
+    score = quantity_score + consistency_score
+
+    if score >= 0.8:
+        tier = "high"
+    elif score >= 0.5:
+        tier = "medium"
+    else:
+        tier = "low"
 
     return {
-        "score": 0.3,
-        "tier": "low",
+        "score": score,
+        "tier": tier,
     }
