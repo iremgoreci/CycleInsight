@@ -4,11 +4,27 @@ from app.models.cycle import Cycle
 from app.schemas.cycle import CycleCreate, CycleUpdate
 
 
-def create_cycle(db: Session, user_id: int, cycle_data: CycleCreate):
+def create_cycle(
+    db: Session,
+    user_id: int,
+    cycle_data: CycleCreate,
+):
+    existing_cycle = (
+        db.query(Cycle)
+        .filter(
+            Cycle.user_id == user_id,
+            Cycle.start_date == cycle_data.start_date,
+        )
+        .first()
+    )
+
+    if existing_cycle:
+        return None
+
     new_cycle = Cycle(
         user_id=user_id,
-        start_date= cycle_data.start_date,
-        end_date= cycle_data.end_date,
+        start_date=cycle_data.start_date,
+        end_date=cycle_data.end_date,
     )
 
     db.add(new_cycle)

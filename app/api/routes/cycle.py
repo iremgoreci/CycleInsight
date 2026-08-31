@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.dependencies import get_db
@@ -14,13 +14,21 @@ router = APIRouter()
 def create_new_cycle(
     cycle: CycleCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
-    return create_cycle(
+    new_cycle = create_cycle(
         db=db,
         user_id=current_user.id,
-        cycle_data=cycle
+        cycle_data=cycle,
     )
+
+    if new_cycle is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A cycle with this start date already exists.",
+        )
+
+    return new_cycle
 
 
 @router.get("/cycles", response_model=list[CycleResponse])
