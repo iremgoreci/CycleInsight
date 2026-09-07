@@ -7,6 +7,7 @@ class Analysis {
     required this.wellbeing,
     required this.symptoms,
     required this.correlations,
+    required this.insights,
   });
 
   final CycleAnalysis cycle;
@@ -16,6 +17,7 @@ class Analysis {
   final WellbeingAnalysis wellbeing;
   final Map<int, SymptomAnalysis> symptoms;
   final Correlations correlations;
+  final List<Insight> insights;
 
   factory Analysis.fromJson(Map<String, dynamic> json) {
     final symptomsJson = _map(json['symptoms']);
@@ -31,6 +33,9 @@ class Analysis {
           int.parse(entry.key): SymptomAnalysis.fromJson(_map(entry.value)),
       },
       correlations: Correlations.fromJson(_map(json['correlations'])),
+      insights: (json['insights'] as List<dynamic>)
+          .map((item) => Insight.fromJson(_map(item)))
+          .toList(),
     );
   }
 }
@@ -101,7 +106,10 @@ class BleedingAnalysis {
 }
 
 class CyclePhase {
-  const CyclePhase({required this.cycleDay, required this.currentPhase});
+  const CyclePhase({
+    required this.cycleDay,
+    required this.currentPhase,
+  });
 
   final int? cycleDay;
   final String? currentPhase;
@@ -139,14 +147,21 @@ class CyclePredictions {
       ovulationDate: _dateOrNull(json['ovulation_date']),
       ovulationWindow: json['ovulation_window'] == null
           ? null
-          : OvulationWindow.fromJson(_map(json['ovulation_window'])),
-      confidence: PredictionConfidence.fromJson(_map(json['confidence'])),
+          : OvulationWindow.fromJson(
+              _map(json['ovulation_window']),
+            ),
+      confidence: PredictionConfidence.fromJson(
+        _map(json['confidence']),
+      ),
     );
   }
 }
 
 class OvulationWindow {
-  const OvulationWindow({required this.startDay, required this.endDay});
+  const OvulationWindow({
+    required this.startDay,
+    required this.endDay,
+  });
 
   final int startDay;
   final int endDay;
@@ -160,7 +175,10 @@ class OvulationWindow {
 }
 
 class PredictionConfidence {
-  const PredictionConfidence({required this.score, required this.tier});
+  const PredictionConfidence({
+    required this.score,
+    required this.tier,
+  });
 
   final double score;
   final String tier;
@@ -188,10 +206,18 @@ class WellbeingAnalysis {
 
   factory WellbeingAnalysis.fromJson(Map<String, dynamic> json) {
     return WellbeingAnalysis(
-      mood: WellbeingMetric.fromJson(_map(json['mood'])),
-      pain: WellbeingMetric.fromJson(_map(json['pain'])),
-      sleep: WellbeingMetric.fromJson(_map(json['sleep'])),
-      stress: WellbeingMetric.fromJson(_map(json['stress'])),
+      mood: WellbeingMetric.fromJson(
+        _map(json['mood']),
+      ),
+      pain: WellbeingMetric.fromJson(
+        _map(json['pain']),
+      ),
+      sleep: WellbeingMetric.fromJson(
+        _map(json['sleep']),
+      ),
+      stress: WellbeingMetric.fromJson(
+        _map(json['stress']),
+      ),
     );
   }
 }
@@ -219,7 +245,9 @@ class WellbeingMetric {
       maximum: _intOrNull(json['maximum']),
       trend: json['trend'] == null
           ? null
-          : TrendResult.fromJson(_map(json['trend'])),
+          : TrendResult.fromJson(
+              _map(json['trend']),
+            ),
     );
   }
 }
@@ -259,13 +287,18 @@ class SymptomAnalysis {
     return SymptomAnalysis(
       dates: _dateList(json['dates']),
       frequency: _int(json['frequency']),
-      occurrenceRate: _doubleOrNull(json['occurrence_rate']),
+      occurrenceRate: _doubleOrNull(
+        json['occurrence_rate'],
+      ),
     );
   }
 }
 
 class Correlations {
-  const Correlations({required this.sleepMood, required this.stressPain});
+  const Correlations({
+    required this.sleepMood,
+    required this.stressPain,
+  });
 
   final CorrelationResult? sleepMood;
   final CorrelationResult? stressPain;
@@ -274,16 +307,23 @@ class Correlations {
     return Correlations(
       sleepMood: json['sleep_mood'] == null
           ? null
-          : CorrelationResult.fromJson(_map(json['sleep_mood'])),
+          : CorrelationResult.fromJson(
+              _map(json['sleep_mood']),
+            ),
       stressPain: json['stress_pain'] == null
           ? null
-          : CorrelationResult.fromJson(_map(json['stress_pain'])),
+          : CorrelationResult.fromJson(
+              _map(json['stress_pain']),
+            ),
     );
   }
 }
 
 class CorrelationResult {
-  const CorrelationResult({required this.correlation, required this.pValue});
+  const CorrelationResult({
+    required this.correlation,
+    required this.pValue,
+  });
 
   final double correlation;
   final double pValue;
@@ -296,22 +336,53 @@ class CorrelationResult {
   }
 }
 
-Map<String, dynamic> _map(Object? value) => Map<String, dynamic>.from(value! as Map);
+class Insight {
+  const Insight({
+    required this.type,
+    required this.title,
+    required this.message,
+    required this.priority,
+  });
+
+  final String type;
+  final String title;
+  final String message;
+  final String priority;
+
+  factory Insight.fromJson(Map<String, dynamic> json) {
+    return Insight(
+      type: json['type'] as String,
+      title: json['title'] as String,
+      message: json['message'] as String,
+      priority: json['priority'] as String,
+    );
+  }
+}
+
+Map<String, dynamic> _map(Object? value) =>
+    Map<String, dynamic>.from(value! as Map);
 
 int _int(Object? value) => (value as num).toInt();
 
-int? _intOrNull(Object? value) => value == null ? null : _int(value);
+int? _intOrNull(Object? value) =>
+    value == null ? null : _int(value);
 
-double _double(Object? value) => (value as num).toDouble();
+double _double(Object? value) =>
+    (value as num).toDouble();
 
-double? _doubleOrNull(Object? value) => value == null ? null : _double(value);
+double? _doubleOrNull(Object? value) =>
+    value == null ? null : _double(value);
 
 DateTime? _dateOrNull(Object? value) {
-  return value == null ? null : DateTime.parse(value as String);
+  return value == null
+      ? null
+      : DateTime.parse(value as String);
 }
 
 List<int> _intList(Object? value) {
-  return (value as List<dynamic>).map(_int).toList();
+  return (value as List<dynamic>)
+      .map(_int)
+      .toList();
 }
 
 List<DateTime> _dateList(Object? value) {

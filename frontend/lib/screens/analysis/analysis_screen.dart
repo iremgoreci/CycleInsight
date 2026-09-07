@@ -30,6 +30,8 @@ class AnalysisScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
           children: [
+            _InsightsSection(insights: data.insights),
+            const SizedBox(height: 16),
             _CurrentCycleSection(phase: data.phase),
             const SizedBox(height: 16),
             _PredictionsSection(predictions: data.predictions),
@@ -54,6 +56,62 @@ class AnalysisScreen extends ConsumerWidget {
 
   String _errorMessage(Object error) {
     return error is ApiException ? error.message : 'Unable to load analysis';
+  }
+}
+
+class _InsightsSection extends StatelessWidget {
+  const _InsightsSection({required this.insights});
+
+  final List<Insight> insights;
+
+  @override
+  Widget build(BuildContext context) {
+    if (insights.isEmpty) {
+      return const _AnalysisSection(
+        title: 'Insights',
+        icon: Icons.lightbulb_outline,
+        children: [
+          Text('No insights are available yet.'),
+        ],
+      );
+    }
+
+    return _AnalysisSection(
+      title: 'Insights',
+      icon: Icons.lightbulb_outline,
+      children: [
+        for (final insight in insights) ...[
+          _InsightItem(insight: insight),
+          if (insight != insights.last) const Divider(),
+        ],
+      ],
+    );
+  }
+}
+
+class _InsightItem extends StatelessWidget {
+  const _InsightItem({required this.insight});
+
+  final Insight insight;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          insight.title,
+          style: theme.textTheme.titleMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          insight.message,
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
+    );
   }
 }
 
@@ -229,7 +287,10 @@ class _WellbeingSummarySection extends StatelessWidget {
 }
 
 class _WellbeingMetricSummary extends StatelessWidget {
-  const _WellbeingMetricSummary({required this.label, required this.metric});
+  const _WellbeingMetricSummary({
+    required this.label,
+    required this.metric,
+  });
 
   final String label;
   final WellbeingMetric metric;
@@ -243,8 +304,14 @@ class _WellbeingMetricSummary extends StatelessWidget {
       children: [
         Text(label, style: theme.textTheme.titleMedium),
         const SizedBox(height: 4),
-        _AnalysisValueRow(label: 'Average', value: _levelLabel(metric.average)),
-        _AnalysisValueRow(label: 'Median', value: _levelLabel(metric.median)),
+        _AnalysisValueRow(
+          label: 'Average',
+          value: _levelLabel(metric.average),
+        ),
+        _AnalysisValueRow(
+          label: 'Median',
+          value: _levelLabel(metric.median),
+        ),
         _AnalysisValueRow(
           label: 'Minimum',
           value: metric.minimum?.toString(),
@@ -277,7 +344,9 @@ class _SymptomsSummarySection extends StatelessWidget {
       return const _AnalysisSection(
         title: 'Symptoms summary',
         icon: Icons.healing_outlined,
-        children: [Text('No symptoms have been recorded yet.')],
+        children: [
+          Text('No symptoms have been recorded yet.'),
+        ],
       );
     }
 
@@ -285,19 +354,29 @@ class _SymptomsSummarySection extends StatelessWidget {
       loading: () => const _AnalysisSection(
         title: 'Symptoms summary',
         icon: Icons.healing_outlined,
-        children: [Text('Loading symptom names...')],
+        children: [
+          Text('Loading symptom names...'),
+        ],
       ),
       error: (_, _) => const _AnalysisSection(
         title: 'Symptoms summary',
         icon: Icons.healing_outlined,
-        children: [Text('Symptom names are currently unavailable.')],
+        children: [
+          Text('Symptom names are currently unavailable.'),
+        ],
       ),
       data: (types) {
-        final namesById = {for (final type in types) type.id: type.name};
+        final namesById = {
+          for (final type in types) type.id: type.name,
+        };
+
         final entries = symptoms.entries.toList()
           ..sort(
-            (first, second) => (namesById[first.key] ?? 'Unknown symptom')
-                .compareTo(namesById[second.key] ?? 'Unknown symptom'),
+            (first, second) =>
+                (namesById[first.key] ?? 'Unknown symptom')
+                    .compareTo(
+                  namesById[second.key] ?? 'Unknown symptom',
+                ),
           );
 
         return _AnalysisSection(
@@ -317,7 +396,9 @@ class _SymptomsSummarySection extends StatelessWidget {
 }
 
 class _CorrelationsSummarySection extends StatelessWidget {
-  const _CorrelationsSummarySection({required this.correlations});
+  const _CorrelationsSummarySection({
+    required this.correlations,
+  });
 
   final Correlations correlations;
 
@@ -366,14 +447,23 @@ class _AnalysisSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, color: theme.colorScheme.primary),
+                Icon(
+                  icon,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(width: 8),
-                Text(title, style: theme.textTheme.titleLarge),
+                Text(
+                  title,
+                  style: theme.textTheme.titleLarge,
+                ),
               ],
             ),
             if (subtitle != null) ...[
               const SizedBox(height: 8),
-              Text(subtitle!, style: theme.textTheme.bodyMedium),
+              Text(
+                subtitle!,
+                style: theme.textTheme.bodyMedium,
+              ),
             ],
             const SizedBox(height: 12),
             ...children,
@@ -385,7 +475,10 @@ class _AnalysisSection extends StatelessWidget {
 }
 
 class _AnalysisValueRow extends StatelessWidget {
-  const _AnalysisValueRow({required this.label, required this.value});
+  const _AnalysisValueRow({
+    required this.label,
+    required this.value,
+  });
 
   final String label;
   final String? value;
@@ -406,7 +499,9 @@ class _AnalysisValueRow extends StatelessWidget {
               value ?? 'Not enough data',
               textAlign: TextAlign.end,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: value == null ? theme.colorScheme.onSurfaceVariant : null,
+                color: value == null
+                    ? theme.colorScheme.onSurfaceVariant
+                    : null,
               ),
             ),
           ),
@@ -417,7 +512,10 @@ class _AnalysisValueRow extends StatelessWidget {
 }
 
 class _AnalysisLoadError extends StatelessWidget {
-  const _AnalysisLoadError({required this.message, required this.onRetry});
+  const _AnalysisLoadError({
+    required this.message,
+    required this.onRetry,
+  });
 
   final String message;
   final VoidCallback onRetry;
@@ -432,9 +530,15 @@ class _AnalysisLoadError extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 48),
             const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onRetry, child: const Text('Try again')),
+            FilledButton(
+              onPressed: onRetry,
+              child: const Text('Try again'),
+            ),
           ],
         ),
       ),
@@ -443,7 +547,9 @@ class _AnalysisLoadError extends StatelessWidget {
 }
 
 String? _formatDate(DateTime? date) {
-  return date == null ? null : AnalysisScreen._dateFormat.format(date);
+  return date == null
+      ? null
+      : AnalysisScreen._dateFormat.format(date);
 }
 
 String? _phaseLabel(String? phase) {
@@ -461,13 +567,17 @@ String? _phaseLabel(String? phase) {
 }
 
 String? _ovulationWindowLabel(OvulationWindow? window) {
-  return window == null ? null : 'Cycle days ${window.startDay}-${window.endDay}';
+  return window == null
+      ? null
+      : 'Cycle days ${window.startDay}-${window.endDay}';
 }
 
 String _confidenceLabel(PredictionConfidence confidence) {
   final tier = confidence.tier.isEmpty
       ? 'Not enough data'
-      : '${confidence.tier[0].toUpperCase()}${confidence.tier.substring(1)}';
+      : '${confidence.tier[0].toUpperCase()}'
+          '${confidence.tier.substring(1)}';
+
   return '$tier (${(confidence.score * 100).toStringAsFixed(0)}%)';
 }
 
@@ -479,6 +589,7 @@ String? _daysLabel(double? value) {
   final formatted = value == value.roundToDouble()
       ? value.toStringAsFixed(0)
       : value.toStringAsFixed(1);
+
   return '$formatted days';
 }
 
@@ -500,21 +611,26 @@ String? _trendLabel(TrendResult? trend) {
   if (trend.slope > 0.01) {
     return 'Increasing';
   }
+
   if (trend.slope < -0.01) {
     return 'Decreasing';
   }
+
   return 'Stable';
 }
 
 String _symptomSummaryLabel(SymptomAnalysis symptom) {
   final frequencyLabel = '${symptom.frequency} '
       '${symptom.frequency == 1 ? 'time' : 'times'}';
+
   final occurrenceRate = symptom.occurrenceRate;
+
   if (occurrenceRate == null) {
     return frequencyLabel;
   }
 
-  return '$frequencyLabel · ${(occurrenceRate * 100).toStringAsFixed(0)}% of logged days';
+  return '$frequencyLabel · '
+      '${(occurrenceRate * 100).toStringAsFixed(0)}% of logged days';
 }
 
 String? _correlationLabel(CorrelationResult? correlation) {
@@ -522,8 +638,11 @@ String? _correlationLabel(CorrelationResult? correlation) {
     return null;
   }
 
-  final direction = correlation.correlation < 0 ? 'negative' : 'positive';
+  final direction =
+      correlation.correlation < 0 ? 'negative' : 'positive';
+
   final magnitude = correlation.correlation.abs();
+
   final strength = switch (magnitude) {
     < 0.1 => 'Negligible',
     < 0.3 => 'Weak',

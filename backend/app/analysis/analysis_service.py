@@ -58,24 +58,36 @@ from app.analysis.prediction_analysis import (
     calculate_prediction_confidence,
 )
 
+from app.analysis.insight_generation import (
+    generate_insights,
+)
+
 
 def analyze_user_data(
     cycles: list[Any],
     daily_logs: list[Any],
     daily_log_symptoms: list[Any],
+    symptom_types: list[Any],
     age: int | None = None,
 ) -> dict:
     """
-    Run all available analyses on a user's cycle and daily log data.
+    Run all available analyses on a user's cycle
+    and daily log data.
     """
 
     # Data preparation
 
-    cycle_start_dates = extract_cycle_start_dates(cycles)
+    cycle_start_dates = extract_cycle_start_dates(
+        cycles
+    )
 
-    cycle_lengths = calculate_cycle_lengths(cycle_start_dates)
+    cycle_lengths = calculate_cycle_lengths(
+        cycle_start_dates
+    )
 
-    bleeding_levels = extract_bleeding_levels(daily_logs)
+    bleeding_levels = extract_bleeding_levels(
+        daily_logs
+    )
 
     mood_levels = extract_wellbeing_levels(
         daily_logs,
@@ -114,6 +126,13 @@ def analyze_user_data(
         daily_logs,
     )
 
+    # Symptom names
+
+    symptom_names = {
+        symptom_type.id: symptom_type.name
+        for symptom_type in symptom_types
+    }
+
     # Cycle calculations
 
     estimated_cycle_length = estimate_cycle_length(
@@ -121,7 +140,10 @@ def analyze_user_data(
     )
 
     latest_cycle = (
-        max(cycles, key=lambda cycle: cycle.start_date)
+        max(
+            cycles,
+            key=lambda cycle: cycle.start_date
+        )
         if cycles
         else None
     )
@@ -144,8 +166,10 @@ def analyze_user_data(
         current_period_duration = None
 
     if last_cycle_start_date is not None:
-        current_cycle_day = calculate_current_cycle_day(
-            last_cycle_start_date
+        current_cycle_day = (
+            calculate_current_cycle_day(
+                last_cycle_start_date
+            )
         )
     else:
         current_cycle_day = None
@@ -167,27 +191,31 @@ def analyze_user_data(
         current_phase = None
 
     if last_cycle_start_date is not None:
-        next_period_date = estimate_next_period_date(
-            last_cycle_start_date,
-            estimated_cycle_length,
+        next_period_date = (
+            estimate_next_period_date(
+                last_cycle_start_date,
+                estimated_cycle_length,
+            )
         )
 
-        ovulation_date = estimate_ovulation_date(
-            last_cycle_start_date,
-            ovulation_day,
+        ovulation_date = (
+            estimate_ovulation_date(
+                last_cycle_start_date,
+                ovulation_day,
+            )
         )
     else:
         next_period_date = None
         ovulation_date = None
 
-
     ovulation_window = estimate_ovulation_window(
         ovulation_day
     )
 
-
-    prediction_confidence = calculate_prediction_confidence(
-        cycle_lengths
+    prediction_confidence = (
+        calculate_prediction_confidence(
+            cycle_lengths
+        )
     )
 
     # Symptom analysis
@@ -210,49 +238,61 @@ def analyze_user_data(
 
     # Return analysis
 
-    return {
+    analysis = {
         "cycle": {
             "cycle_lengths": cycle_lengths,
-            "average_length": calculate_average_cycle_length(
-                cycle_lengths
-            ),
-            "median_length": calculate_median_cycle_length(
-                cycle_lengths
-            ),
-            "variability": calculate_cycle_variability(
-                cycle_lengths
-            ),
-            "range": calculate_cycle_range(
-                cycle_lengths
-            ),
-            "consecutive_differences": calculate_consecutive_cycle_differences(
-                cycle_lengths
-            ),
-            "regularity": assess_cycle_regularity(
-                cycle_lengths,
-                age,
-            ),
-            "trend": calculate_cycle_trend(
-                cycle_lengths
-            ),
+            "average_length":
+                calculate_average_cycle_length(
+                    cycle_lengths
+                ),
+            "median_length":
+                calculate_median_cycle_length(
+                    cycle_lengths
+                ),
+            "variability":
+                calculate_cycle_variability(
+                    cycle_lengths
+                ),
+            "range":
+                calculate_cycle_range(
+                    cycle_lengths
+                ),
+            "consecutive_differences":
+                calculate_consecutive_cycle_differences(
+                    cycle_lengths
+                ),
+            "regularity":
+                assess_cycle_regularity(
+                    cycle_lengths,
+                    age,
+                ),
+            "trend":
+                calculate_cycle_trend(
+                    cycle_lengths
+                ),
         },
 
         "bleeding": {
-            "period_duration": calculate_period_duration(
-                bleeding_levels
-            ),
-            "average_level": calculate_average_bleeding_level(
-                bleeding_levels
-            ),
-            "median_level": calculate_median_bleeding_level(
-                bleeding_levels
-            ),
-            "peak_level": calculate_peak_bleeding_level(
-                bleeding_levels
-            ),
-            "intensity_score": calculate_bleeding_intensity_score(
-                bleeding_levels
-            ),
+            "period_duration":
+                calculate_period_duration(
+                    bleeding_levels
+                ),
+            "average_level":
+                calculate_average_bleeding_level(
+                    bleeding_levels
+                ),
+            "median_level":
+                calculate_median_bleeding_level(
+                    bleeding_levels
+                ),
+            "peak_level":
+                calculate_peak_bleeding_level(
+                    bleeding_levels
+                ),
+            "intensity_score":
+                calculate_bleeding_intensity_score(
+                    bleeding_levels
+                ),
         },
 
         "phase": {
@@ -261,59 +301,136 @@ def analyze_user_data(
         },
 
         "predictions": {
-            "estimated_cycle_length": estimated_cycle_length,
-            "next_period_date": next_period_date,
-            "ovulation_day": ovulation_day,
-            "ovulation_date": ovulation_date,
-            "ovulation_window": ovulation_window,
-            "confidence": prediction_confidence,
+            "estimated_cycle_length":
+                estimated_cycle_length,
+            "next_period_date":
+                next_period_date,
+            "ovulation_day":
+                ovulation_day,
+            "ovulation_date":
+                ovulation_date,
+            "ovulation_window":
+                ovulation_window,
+            "confidence":
+                prediction_confidence,
         },
 
         "wellbeing": {
             "mood": {
-                "average": calculate_average_level(mood_levels),
-                "median": calculate_median_level(mood_levels),
-                "minimum": calculate_min_level(mood_levels),
-                "maximum": calculate_max_level(mood_levels),
-                "trend": calculate_level_trend(mood_levels),
+                "average":
+                    calculate_average_level(
+                        mood_levels
+                    ),
+                "median":
+                    calculate_median_level(
+                        mood_levels
+                    ),
+                "minimum":
+                    calculate_min_level(
+                        mood_levels
+                    ),
+                "maximum":
+                    calculate_max_level(
+                        mood_levels
+                    ),
+                "trend":
+                    calculate_level_trend(
+                        mood_levels
+                    ),
             },
 
             "pain": {
-                "average": calculate_average_level(pain_levels),
-                "median": calculate_median_level(pain_levels),
-                "minimum": calculate_min_level(pain_levels),
-                "maximum": calculate_max_level(pain_levels),
-                "trend": calculate_level_trend(pain_levels),
+                "average":
+                    calculate_average_level(
+                        pain_levels
+                    ),
+                "median":
+                    calculate_median_level(
+                        pain_levels
+                    ),
+                "minimum":
+                    calculate_min_level(
+                        pain_levels
+                    ),
+                "maximum":
+                    calculate_max_level(
+                        pain_levels
+                    ),
+                "trend":
+                    calculate_level_trend(
+                        pain_levels
+                    ),
             },
 
             "sleep": {
-                "average": calculate_average_level(sleep_levels),
-                "median": calculate_median_level(sleep_levels),
-                "minimum": calculate_min_level(sleep_levels),
-                "maximum": calculate_max_level(sleep_levels),
-                "trend": calculate_level_trend(sleep_levels),
+                "average":
+                    calculate_average_level(
+                        sleep_levels
+                    ),
+                "median":
+                    calculate_median_level(
+                        sleep_levels
+                    ),
+                "minimum":
+                    calculate_min_level(
+                        sleep_levels
+                    ),
+                "maximum":
+                    calculate_max_level(
+                        sleep_levels
+                    ),
+                "trend":
+                    calculate_level_trend(
+                        sleep_levels
+                    ),
             },
 
             "stress": {
-                "average": calculate_average_level(stress_levels),
-                "median": calculate_median_level(stress_levels),
-                "minimum": calculate_min_level(stress_levels),
-                "maximum": calculate_max_level(stress_levels),
-                "trend": calculate_level_trend(stress_levels),
+                "average":
+                    calculate_average_level(
+                        stress_levels
+                    ),
+                "median":
+                    calculate_median_level(
+                        stress_levels
+                    ),
+                "minimum":
+                    calculate_min_level(
+                        stress_levels
+                    ),
+                "maximum":
+                    calculate_max_level(
+                        stress_levels
+                    ),
+                "trend":
+                    calculate_level_trend(
+                        stress_levels
+                    ),
             },
         },
 
         "symptoms": symptom_analysis,
 
         "correlations": {
-            "sleep_mood": calculate_spearman_correlation(
-                sleep_mood[0],
-                sleep_mood[1],
-            ),
+            "sleep_mood":
+                calculate_spearman_correlation(
+                    sleep_mood[0],
+                    sleep_mood[1],
+                ),
 
-            "stress_pain": calculate_spearman_correlation(
-                stress_pain[0],
-                stress_pain[1],
-            ),
+            "stress_pain":
+                calculate_spearman_correlation(
+                    stress_pain[0],
+                    stress_pain[1],
+                ),
         },
     }
+
+    # Insight generation
+
+    analysis["insights"] = generate_insights(
+        analysis,
+        symptom_names=symptom_names,
+    )
+
+    return analysis

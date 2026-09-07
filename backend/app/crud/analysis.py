@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.cycle import Cycle
 from app.models.daily_log import DailyLog
 from app.models.daily_log_symptom import DailyLogSymptom
+from app.models.symptom_type import SymptomType
 
 
 def get_user_analysis_data(
@@ -37,8 +38,15 @@ def get_user_analysis_data(
             )
         ).all()
 
+    symptom_types = db.query(
+        SymptomType
+    ).order_by(
+        SymptomType.id
+    ).all()
+
     return {
         "cycles": cycles,
         "daily_logs": daily_logs,
         "daily_log_symptoms": daily_log_symptoms,
+        "symptom_types": symptom_types,
     }

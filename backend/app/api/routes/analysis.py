@@ -50,6 +50,9 @@ def read_analysis(
         daily_log_symptoms=analysis_data[
             "daily_log_symptoms"
         ],
+        symptom_types=analysis_data[
+            "symptom_types"
+        ],
         age=age,
     )
 
