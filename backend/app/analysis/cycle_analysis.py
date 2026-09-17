@@ -77,7 +77,7 @@ def calculate_consecutive_cycle_differences(cycle_lengths: list[int]) -> list[in
     return cycle_length_differences
 
 
-def assess_cycle_regularity(cycle_lengths: list[int], age: int) -> str:
+def assess_cycle_regularity(cycle_lengths: list[int], age: int | None) -> str:    
     """
     Assess menstrual cycle regularity based on age-specific
     FIGO cycle-length variation criteria.
@@ -85,6 +85,9 @@ def assess_cycle_regularity(cycle_lengths: list[int], age: int) -> str:
 
     if len(cycle_lengths) < 2:
         return "insufficient_data"
+
+    if age is None:
+        return "not_assessed"
 
     cycle_range = max(cycle_lengths) - min(cycle_lengths)
 
