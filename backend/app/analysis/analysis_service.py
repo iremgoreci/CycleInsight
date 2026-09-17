@@ -38,6 +38,7 @@ from app.analysis.data_preparation import (
     extract_wellbeing_levels,
     extract_matched_daily_log_values,
     extract_symptom_dates,
+    extract_daily_log_phases,
 )
 
 from app.analysis.correlation_analysis import (
@@ -218,6 +219,45 @@ def analyze_user_data(
         )
     )
 
+        # Phase-based analysis
+
+    phase_logs = extract_daily_log_phases(
+        daily_logs=daily_logs,
+        cycle_start_dates=cycle_start_dates,
+        ovulation_day=ovulation_day,
+        period_duration=current_period_duration,
+    )
+
+    phase_wellbeing = {}
+
+    for phase_name, logs in phase_logs.items():
+        phase_wellbeing[phase_name] = {
+            "mood": calculate_average_level(
+                [
+                    log.mood_level
+                    for log in logs
+                ]
+            ),
+            "pain": calculate_average_level(
+                [
+                    log.pain_level
+                    for log in logs
+                ]
+            ),
+            "sleep": calculate_average_level(
+                [
+                    log.sleep_quality
+                    for log in logs
+                ]
+            ),
+            "stress": calculate_average_level(
+                [
+                    log.stress_level
+                    for log in logs
+                ]
+            ),
+        }
+
     # Symptom analysis
 
     symptom_analysis = {}
@@ -298,6 +338,7 @@ def analyze_user_data(
         "phase": {
             "cycle_day": current_cycle_day,
             "current_phase": current_phase,
+            "wellbeing": phase_wellbeing,
         },
 
         "predictions": {

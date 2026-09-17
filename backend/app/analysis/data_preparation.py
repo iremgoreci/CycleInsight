@@ -2,6 +2,11 @@ from datetime import date
 from collections import defaultdict
 from typing import Any
 
+from app.analysis.phase_analysis import (
+    calculate_current_cycle_day,
+    calculate_phase_for_cycle_day,
+)
+
 
 def extract_cycle_start_dates(cycles: list[Any]) -> list[date]:
     """
@@ -99,3 +104,85 @@ def extract_symptom_dates(
         for symptom_type_id, dates
         in symptom_dates.items()
     }
+
+
+def extract_daily_log_phases(
+    daily_logs: list[Any],
+    cycle_start_dates: list[date],
+    ovulation_day: int | None,
+    period_duration: int | None = None,
+) -> dict[str, list[Any]]:
+    """
+    Group daily log dates by menstrual cycle phase.
+    """
+
+    phases = {
+        "menstrual": [],
+        "follicular": [],
+        "ovulatory": [],
+        "luteal": [],
+    }
+
+    if not daily_logs:
+        return phases
+
+    if not cycle_start_dates:
+        return phases
+
+    if ovulation_day is None:
+        return phases
+
+    sorted_cycle_start_dates = sorted(
+        cycle_start_dates
+    )
+
+    sorted_logs = sorted(
+        daily_logs,
+        key=lambda log: log.log_date,
+    )
+
+    for log in sorted_logs:
+
+        cycle_start_date = find_cycle_start_for_log(
+            log.log_date,
+            sorted_cycle_start_dates,
+        )
+
+        if cycle_start_date is None:
+            continue
+
+        cycle_day = calculate_current_cycle_day(
+            cycle_start_date,
+            log.log_date,
+        )
+
+        phase = calculate_phase_for_cycle_day(
+            cycle_day=cycle_day,
+            ovulation_day=ovulation_day,
+            period_duration=period_duration,
+        )
+
+        phases[phase].append(log)
+
+    return phases
+
+
+def find_cycle_start_for_log(
+    log_date: date,
+    cycle_start_dates: list[date],
+) -> date | None:
+    """
+    Find the latest cycle start date
+    that is on or before the daily log date.
+    """
+
+    matching_dates = [
+        start_date
+        for start_date in cycle_start_dates
+        if start_date <= log_date
+    ]
+
+    if not matching_dates:
+        return None
+
+    return max(matching_dates)
