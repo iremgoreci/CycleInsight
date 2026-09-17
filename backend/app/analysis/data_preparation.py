@@ -186,3 +186,63 @@ def find_cycle_start_for_log(
         return None
 
     return max(matching_dates)
+
+
+def extract_symptom_phase_dates(
+    symptom_dates: dict[int, list[date]],
+    cycle_start_dates: list[date],
+    ovulation_day: int | None,
+    period_duration: int | None = None,
+) -> dict[int, dict[str, list[date]]]:
+    """
+    Group symptom occurrence dates by cycle phase.
+    """
+
+    result = {}
+
+    if not symptom_dates:
+        return result
+
+    if not cycle_start_dates:
+        return result
+
+    if ovulation_day is None:
+        return result
+
+    sorted_cycle_start_dates = sorted(cycle_start_dates)
+
+    for symptom_type_id, dates in symptom_dates.items():
+
+        phase_dates = {
+            "menstrual": [],
+            "follicular": [],
+            "ovulatory": [],
+            "luteal": [],
+        }
+
+        for symptom_date in sorted(dates):
+
+            cycle_start_date = find_cycle_start_for_log(
+                symptom_date,
+                sorted_cycle_start_dates,
+            )
+
+            if cycle_start_date is None:
+                continue
+
+            cycle_day = calculate_current_cycle_day(
+                cycle_start_date,
+                symptom_date,
+            )
+
+            phase = calculate_phase_for_cycle_day(
+                cycle_day=cycle_day,
+                ovulation_day=ovulation_day,
+                period_duration=period_duration,
+            )
+
+            phase_dates[phase].append(symptom_date)
+
+        result[symptom_type_id] = phase_dates
+
+    return result

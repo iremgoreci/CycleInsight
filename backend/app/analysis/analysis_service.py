@@ -30,6 +30,8 @@ from app.analysis.wellbeing_analysis import (
 from app.analysis.symptom_analysis import (
     calculate_symptom_frequency,
     calculate_symptom_occurrence_rate,
+    calculate_symptom_phase_distribution,
+    calculate_most_common_symptom_phase,
 )
 
 from app.analysis.data_preparation import (
@@ -39,6 +41,7 @@ from app.analysis.data_preparation import (
     extract_matched_daily_log_values,
     extract_symptom_dates,
     extract_daily_log_phases,
+    extract_symptom_phase_dates,
 )
 
 from app.analysis.correlation_analysis import (
@@ -219,7 +222,7 @@ def analyze_user_data(
         )
     )
 
-        # Phase-based analysis
+    # Phase-based analysis
 
     phase_logs = extract_daily_log_phases(
         daily_logs=daily_logs,
@@ -258,11 +261,44 @@ def analyze_user_data(
             ),
         }
 
+    symptom_phase_dates = extract_symptom_phase_dates(
+        symptom_dates=symptom_dates,
+        cycle_start_dates=cycle_start_dates,
+        ovulation_day=ovulation_day,
+        period_duration=current_period_duration,
+    )
+
     # Symptom analysis
+
+        # Symptom analysis
+
+        # Symptom analysis
 
     symptom_analysis = {}
 
     for symptom_type_id, dates in symptom_dates.items():
+
+        phase_dates = symptom_phase_dates.get(
+            symptom_type_id,
+            {
+                "menstrual": [],
+                "follicular": [],
+                "ovulatory": [],
+                "luteal": [],
+            },
+        )
+
+        phase_distribution = calculate_symptom_phase_distribution(
+            [
+                phase
+                for phase, dates_in_phase in phase_dates.items()
+                for _ in dates_in_phase
+            ]
+        )
+
+        most_common_phase = calculate_most_common_symptom_phase(
+            phase_distribution
+        )
 
         symptom_analysis[symptom_type_id] = {
             "dates": dates,
@@ -274,6 +310,8 @@ def analyze_user_data(
                     dates,
                     len(daily_logs),
                 ),
+            "phase_distribution": phase_distribution,
+            "most_common_phase": most_common_phase,
         }
 
     # Return analysis

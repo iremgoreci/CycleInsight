@@ -34,3 +34,49 @@ def calculate_symptom_dates(
     """
 
     return sorted(symptom_dates)
+
+
+def calculate_symptom_phase_distribution(
+    phases: list[str],
+) -> dict[str, int]:
+    """
+    Count how many times a symptom was recorded
+    in each cycle phase.
+    """
+
+    distribution = {
+        "menstrual": 0,
+        "follicular": 0,
+        "ovulatory": 0,
+        "luteal": 0,
+    }
+
+    for phase in phases:
+        if phase in distribution:
+            distribution[phase] += 1
+
+    return distribution
+
+
+def calculate_most_common_symptom_phase(
+    phase_distribution: dict[str, int],
+) -> str | None:
+    """
+    Find the cycle phase in which a symptom
+    was recorded most frequently.
+    """
+
+    if not phase_distribution:
+        return None
+
+    total_occurrences = sum(
+        phase_distribution.values()
+    )
+
+    if total_occurrences == 0:
+        return None
+
+    return max(
+        phase_distribution,
+        key=phase_distribution.get,
+    )

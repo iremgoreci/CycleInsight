@@ -306,10 +306,15 @@ def generate_symptom_insights(
                 f"Symptom {symptom_type_id}",
             )
 
+            most_common_phase = symptom_data.get(
+                "most_common_phase"
+            )
+
             recurring_symptoms.append(
                 (
                     symptom_name,
                     frequency,
+                    most_common_phase,
                 )
             )
 
@@ -323,12 +328,19 @@ def generate_symptom_insights(
 
     symptom_messages = []
 
-    for symptom_name, frequency in recurring_symptoms:
+    for symptom_name, frequency, most_common_phase in recurring_symptoms:
 
-        symptom_messages.append(
-            f"{symptom_name} was recorded "
-            f"{frequency} times."
-        )
+        if most_common_phase:
+            symptom_messages.append(
+                f"{symptom_name} was recorded "
+                f"{frequency} times, most frequently "
+                f"during the {most_common_phase} phase."
+            )
+        else:
+            symptom_messages.append(
+                f"{symptom_name} was recorded "
+                f"{frequency} times."
+            )
 
     insights.append({
         "type": "symptom_pattern",

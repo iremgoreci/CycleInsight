@@ -11,6 +11,8 @@ from app.analysis.bleeding_analysis import (
 from app.analysis.symptom_analysis import (
     calculate_symptom_frequency,
     calculate_symptom_occurrence_rate,
+    calculate_symptom_phase_distribution,
+    calculate_most_common_symptom_phase,
 )
 
 
@@ -74,3 +76,37 @@ def test_symptom_occurrence_rate():
     )
 
     assert result == 0.2
+
+
+def test_symptom_phase_distribution():
+    phases = [
+        "menstrual",
+        "menstrual",
+        "follicular",
+        "luteal",
+        "luteal",
+    ]
+
+    result = calculate_symptom_phase_distribution(phases)
+
+    assert result == {
+        "menstrual": 2,
+        "follicular": 1,
+        "ovulatory": 0,
+        "luteal": 2,
+    }
+
+
+def test_most_common_symptom_phase():
+    distribution = {
+        "menstrual": 1,
+        "follicular": 0,
+        "ovulatory": 1,
+        "luteal": 4,
+    }
+
+    result = calculate_most_common_symptom_phase(
+        distribution
+    )
+
+    assert result == "luteal"

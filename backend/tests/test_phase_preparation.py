@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 from app.analysis.data_preparation import (
     extract_daily_log_phases,
+    extract_symptom_phase_dates,
 )
 
 
@@ -104,4 +105,35 @@ def test_extract_daily_log_phases_without_ovulation_day():
         "follicular": [],
         "ovulatory": [],
         "luteal": [],
+    }
+
+
+def test_extract_symptom_phase_dates():
+    symptom_dates = {
+        1: [
+            date(2026, 9, 2),
+            date(2026, 9, 8),
+            date(2026, 9, 14),
+            date(2026, 9, 20),
+        ]
+    }
+
+    cycle_start_dates = [
+        date(2026, 9, 1),
+    ]
+
+    result = extract_symptom_phase_dates(
+        symptom_dates=symptom_dates,
+        cycle_start_dates=cycle_start_dates,
+        ovulation_day=14,
+        period_duration=5,
+    )
+
+    assert result == {
+        1: {
+            "menstrual": [date(2026, 9, 2)],
+            "follicular": [date(2026, 9, 8)],
+            "ovulatory": [date(2026, 9, 14)],
+            "luteal": [date(2026, 9, 20)],
+        }
     }

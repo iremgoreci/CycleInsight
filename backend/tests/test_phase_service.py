@@ -55,11 +55,33 @@ def test_phase_wellbeing_analysis():
         ),
     ]
 
+    symptom_types = [
+        SimpleNamespace(
+            id=1,
+            name="Baş ağrısı",
+        ),
+    ]
+
+    daily_log_symptoms = [
+        SimpleNamespace(
+            daily_log_id=1,
+            symptom_type_id=1,
+        ),
+        SimpleNamespace(
+            daily_log_id=3,
+            symptom_type_id=1,
+        ),
+        SimpleNamespace(
+            daily_log_id=4,
+            symptom_type_id=1,
+        ),
+    ]
+
     result = analyze_user_data(
         cycles=cycles,
         daily_logs=daily_logs,
-        daily_log_symptoms=[],
-        symptom_types=[],
+        daily_log_symptoms=daily_log_symptoms,
+        symptom_types=symptom_types,
         age=20,
     )
 
@@ -73,3 +95,16 @@ def test_phase_wellbeing_analysis():
     assert phase_wellbeing["menstrual"]["pain"] == 4
     assert phase_wellbeing["ovulatory"]["sleep"] == 5
     assert phase_wellbeing["luteal"]["stress"] == 4
+
+    symptom = result["symptoms"][1]
+
+    assert symptom["frequency"] == 3
+
+    assert symptom["phase_distribution"] == {
+        "menstrual": 1,
+        "follicular": 0,
+        "ovulatory": 1,
+        "luteal": 1,
+    }
+
+    assert symptom["most_common_phase"] == "menstrual"
