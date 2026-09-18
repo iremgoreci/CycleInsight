@@ -8,8 +8,10 @@ import '../../core/errors/api_exception.dart';
 import '../../data/models/daily_log.dart';
 import '../../data/models/daily_log_symptom.dart';
 import '../../data/models/symptom_type.dart';
+import '../../core/theme/app_theme.dart';
 import '../../state/daily_log_provider.dart';
 import '../../state/symptom_provider.dart';
+import '../../widgets/profile_button.dart';
 import 'daily_log_labels.dart';
 import 'daily_log_list_screen.dart';
 
@@ -162,22 +164,32 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit daily log' : 'New daily log'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: ProfileButton(),
+          ),
+        ],
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.md),
           children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Date'),
-              subtitle: Text(_displayDateFormat.format(_logDate)),
-              trailing: const Icon(Icons.edit_calendar_outlined),
-              enabled: !_isSubmitting,
-              onTap: _isSubmitting ? null : _pickDate,
+            Card(
+              child: ListTile(
+                title: const Text('Date'),
+                subtitle: Text(_displayDateFormat.format(_logDate)),
+                trailing: const Icon(Icons.edit_calendar_outlined),
+                enabled: !_isSubmitting,
+                onTap: _isSubmitting ? null : _pickDate,
+              ),
             ),
-            const Divider(),
+            const SizedBox(height: AppSpacing.lg),
+            Text('How are you feeling today?',
+                style: Theme.of(context).textTheme.titleMedium),
             _LevelSelector(
               title: 'Bleeding',
+              icon: Icons.water_drop_outlined,
               values: DailyLogLabels.bleeding,
               selectedValue: _bleedingLevel,
               enabled: !_isSubmitting,
@@ -185,6 +197,7 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
             ),
             _LevelSelector(
               title: 'Mood',
+              icon: Icons.mood_outlined,
               values: DailyLogLabels.mood,
               selectedValue: _moodLevel,
               enabled: !_isSubmitting,
@@ -192,6 +205,7 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
             ),
             _LevelSelector(
               title: 'Pain',
+              icon: Icons.bolt_outlined,
               values: DailyLogLabels.pain,
               selectedValue: _painLevel,
               enabled: !_isSubmitting,
@@ -199,6 +213,7 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
             ),
             _LevelSelector(
               title: 'Sleep quality',
+              icon: Icons.bedtime_outlined,
               values: DailyLogLabels.sleep,
               selectedValue: _sleepQuality,
               enabled: !_isSubmitting,
@@ -206,14 +221,15 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
             ),
             _LevelSelector(
               title: 'Stress',
+              icon: Icons.wb_sunny_outlined,
               values: DailyLogLabels.stress,
               selectedValue: _stressLevel,
               enabled: !_isSubmitting,
               onChanged: (value) => setState(() => _stressLevel = value),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.sm),
             _buildSymptomsSection(symptomTypes, relationships),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
             TextField(
               controller: _notesController,
               enabled: !_isSubmitting,
@@ -395,6 +411,7 @@ class _SymptomsError extends StatelessWidget {
 class _LevelSelector extends StatelessWidget {
   const _LevelSelector({
     required this.title,
+    required this.icon,
     required this.values,
     required this.selectedValue,
     required this.enabled,
@@ -402,6 +419,7 @@ class _LevelSelector extends StatelessWidget {
   });
 
   final String title;
+  final IconData icon;
   final Map<int, String> values;
   final int selectedValue;
   final bool enabled;
@@ -409,27 +427,62 @@ class _LevelSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: values.entries
-                .map(
-                  (entry) => ChoiceChip(
-                    label: Text(entry.value),
-                    selected: selectedValue == entry.key,
-                    onSelected: enabled ? (_) => onChanged(entry.key) : null,
+    final keys = values.keys.toList()..sort();
+    final min = keys.first;
+    final max = keys.last;
+
+    return Card(
+      margin: const EdgeInsets.only(top: AppSpacing.sm),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.sm,
+          AppSpacing.md,
+          AppSpacing.xs,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 18, color: AppColors.primaryDark),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
-                )
-                .toList(),
-          ),
-        ],
+                ),
+                Text(
+                  values[selectedValue] ?? '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+            Slider(
+              min: min.toDouble(),
+              max: max.toDouble(),
+              divisions: max - min == 0 ? null : max - min,
+              value: selectedValue.toDouble(),
+              onChanged: enabled
+                  ? (value) => onChanged(value.round())
+                  : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  for (final key in keys)
+                    Text(
+                      '$key',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

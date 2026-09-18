@@ -1,52 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../state/auth_provider.dart';
+import '../../widgets/profile_button.dart';
 import '../analysis/analysis_screen.dart';
-import '../cycles/cycle_list_screen.dart';
 import '../daily_logs/daily_log_list_screen.dart';
+import '../home/home_screen.dart';
 
-class AppShellScreen extends ConsumerWidget {
+/// Shell for the 3 primary destinations: Home, Daily Log, Insights.
+///
+/// Home is the landing tab (index 0) and always defaults there after
+/// login, per the route configuration in `app_router.dart`.
+class AppShellScreen extends StatelessWidget {
   const AppShellScreen({super.key, required this.selectedIndex});
 
   final int selectedIndex;
 
+  static const _titles = ['Home', 'Daily log', 'Insights'];
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final isHome = selectedIndex == 0;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          switch (selectedIndex) {
-            0 => 'Cycles',
-            1 => 'Daily logs',
-            _ => 'Insights',
-          },
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Sign out',
-            onPressed: () => ref.read(authProvider.notifier).logout(),
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
+      appBar: isHome
+          ? null
+          : AppBar(
+              title: Text(_titles[selectedIndex]),
+              actions: const [
+                Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: ProfileButton(),
+                ),
+              ],
+            ),
       body: switch (selectedIndex) {
-        0 => const CycleListScreen(),
+        0 => const HomeScreen(),
         1 => const DailyLogListScreen(),
         _ => const AnalysisScreen(),
       },
-      floatingActionButton: selectedIndex == 2
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: () => context.push(
-                selectedIndex == 0 ? '/cycles/new' : '/daily-logs/new',
-              ),
-              icon: const Icon(Icons.add),
-              label: Text(
-                selectedIndex == 0 ? 'Add cycle' : 'Add daily log',
-              ),
-            ),
+      floatingActionButton: selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: () => context.push('/daily-logs/new'),
+              child: const Icon(Icons.add),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
@@ -58,16 +55,17 @@ class AppShellScreen extends ConsumerWidget {
             },
           );
         },
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Cycles',
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_note_outlined),
             selectedIcon: Icon(Icons.edit_note),
-            label: 'Daily logs',
+            label: 'Daily log',
           ),
           NavigationDestination(
             icon: Icon(Icons.insights_outlined),

@@ -7,7 +7,9 @@ import '../../data/models/daily_log.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../screens/auth/register_screen.dart';
 import '../../screens/cycles/cycle_form_screen.dart';
+import '../../screens/cycles/cycles_history_screen.dart';
 import '../../screens/daily_logs/daily_log_form_screen.dart';
+import '../../screens/learn/learn_about_cycle_screen.dart';
 import '../../screens/shell/app_shell_screen.dart';
 import '../../screens/splash/splash_screen.dart';
 import '../../state/auth_provider.dart';
@@ -65,6 +67,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/insights',
         builder: (context, state) => const AppShellScreen(selectedIndex: 2),
+      ),
+      GoRoute(
+        path: '/cycles',
+        builder: (context, state) => const CyclesHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/learn',
+        builder: (context, state) => const LearnAboutCycleScreen(),
       ),
       GoRoute(
         path: '/cycles/new',

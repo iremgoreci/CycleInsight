@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../core/errors/api_exception.dart';
 import '../../data/models/cycle.dart';
 import '../../state/cycle_provider.dart';
+import '../../widgets/profile_button.dart';
 
 class CycleFormScreen extends ConsumerStatefulWidget {
   const CycleFormScreen({super.key, this.cycle});
@@ -109,7 +110,15 @@ class _CycleFormScreenState extends ConsumerState<CycleFormScreen> {
     final endDate = _endDate;
 
     return Scaffold(
-      appBar: AppBar(title: Text(_isEditing ? 'Edit cycle' : 'New cycle')),
+      appBar: AppBar(
+        title: Text(_isEditing ? 'Edit cycle' : 'New cycle'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: ProfileButton(),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(24),

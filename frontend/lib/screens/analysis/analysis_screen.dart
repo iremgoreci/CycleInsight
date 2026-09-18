@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/errors/api_exception.dart';
+import '../../core/theme/app_theme.dart';
 import '../../data/models/analysis.dart';
 import '../../data/models/symptom_type.dart';
 import '../../state/analysis_provider.dart';
@@ -28,25 +29,25 @@ class AnalysisScreen extends ConsumerWidget {
         onRefresh: () => ref.read(analysisProvider.notifier).refresh(),
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           children: [
             _InsightsSection(insights: data.insights),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _CurrentCycleSection(phase: data.phase),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _PredictionsSection(predictions: data.predictions),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _CycleSummarySection(cycle: data.cycle),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _BleedingSummarySection(bleeding: data.bleeding),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _WellbeingSummarySection(wellbeing: data.wellbeing),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _SymptomsSummarySection(
               symptoms: data.symptoms,
               symptomTypes: symptomTypes,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _CorrelationsSummarySection(correlations: data.correlations),
           ],
         ),
@@ -441,31 +442,41 @@ class _AnalysisSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(
-                  icon,
-                  color: theme.colorScheme.primary,
+                Container(
+                  width: 34,
+                  height: 34,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: AppColors.blush,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 18,
+                    color: AppColors.primaryDark,
+                  ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   title,
-                  style: theme.textTheme.titleLarge,
+                  style: theme.textTheme.titleMedium,
                 ),
               ],
             ),
             if (subtitle != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 subtitle!,
                 style: theme.textTheme.bodyMedium,
               ),
             ],
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.sm),
             ...children,
           ],
         ),
@@ -488,17 +499,19 @@ class _AnalysisValueRow extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label)),
-          const SizedBox(width: 16),
+          Expanded(
+            child: Text(label, style: theme.textTheme.bodyMedium),
+          ),
+          const SizedBox(width: AppSpacing.md),
           Flexible(
             child: Text(
               value ?? 'Not enough data',
               textAlign: TextAlign.end,
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: theme.textTheme.titleSmall?.copyWith(
                 color: value == null
                     ? theme.colorScheme.onSurfaceVariant
                     : null,
