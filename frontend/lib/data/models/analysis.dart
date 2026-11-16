@@ -109,15 +109,56 @@ class CyclePhase {
   const CyclePhase({
     required this.cycleDay,
     required this.currentPhase,
+    this.wellbeingByPhase = const {},
   });
 
   final int? cycleDay;
   final String? currentPhase;
 
+  /// Average wellbeing per phase (`phase.wellbeing` in the API response),
+  /// keyed by phase name. Empty when the backend omits it.
+  final Map<String, PhaseWellbeing> wellbeingByPhase;
+
   factory CyclePhase.fromJson(Map<String, dynamic> json) {
+    final wellbeing = json['wellbeing'];
     return CyclePhase(
       cycleDay: _intOrNull(json['cycle_day']),
       currentPhase: json['current_phase'] as String?,
+      wellbeingByPhase: wellbeing is Map
+          ? {
+              for (final entry in wellbeing.entries)
+                if (entry.value is Map)
+                  entry.key as String: PhaseWellbeing.fromJson(
+                    _map(entry.value),
+                  ),
+            }
+          : const {},
+    );
+  }
+}
+
+class PhaseWellbeing {
+  const PhaseWellbeing({
+    required this.mood,
+    required this.pain,
+    required this.sleep,
+    required this.stress,
+  });
+
+  final double? mood;
+  final double? pain;
+  final double? sleep;
+  final double? stress;
+
+  bool get hasData =>
+      mood != null || pain != null || sleep != null || stress != null;
+
+  factory PhaseWellbeing.fromJson(Map<String, dynamic> json) {
+    return PhaseWellbeing(
+      mood: _doubleOrNull(json['mood']),
+      pain: _doubleOrNull(json['pain']),
+      sleep: _doubleOrNull(json['sleep']),
+      stress: _doubleOrNull(json['stress']),
     );
   }
 }
@@ -147,21 +188,14 @@ class CyclePredictions {
       ovulationDate: _dateOrNull(json['ovulation_date']),
       ovulationWindow: json['ovulation_window'] == null
           ? null
-          : OvulationWindow.fromJson(
-              _map(json['ovulation_window']),
-            ),
-      confidence: PredictionConfidence.fromJson(
-        _map(json['confidence']),
-      ),
+          : OvulationWindow.fromJson(_map(json['ovulation_window'])),
+      confidence: PredictionConfidence.fromJson(_map(json['confidence'])),
     );
   }
 }
 
 class OvulationWindow {
-  const OvulationWindow({
-    required this.startDay,
-    required this.endDay,
-  });
+  const OvulationWindow({required this.startDay, required this.endDay});
 
   final int startDay;
   final int endDay;
@@ -175,10 +209,7 @@ class OvulationWindow {
 }
 
 class PredictionConfidence {
-  const PredictionConfidence({
-    required this.score,
-    required this.tier,
-  });
+  const PredictionConfidence({required this.score, required this.tier});
 
   final double score;
   final String tier;
@@ -206,18 +237,10 @@ class WellbeingAnalysis {
 
   factory WellbeingAnalysis.fromJson(Map<String, dynamic> json) {
     return WellbeingAnalysis(
-      mood: WellbeingMetric.fromJson(
-        _map(json['mood']),
-      ),
-      pain: WellbeingMetric.fromJson(
-        _map(json['pain']),
-      ),
-      sleep: WellbeingMetric.fromJson(
-        _map(json['sleep']),
-      ),
-      stress: WellbeingMetric.fromJson(
-        _map(json['stress']),
-      ),
+      mood: WellbeingMetric.fromJson(_map(json['mood'])),
+      pain: WellbeingMetric.fromJson(_map(json['pain'])),
+      sleep: WellbeingMetric.fromJson(_map(json['sleep'])),
+      stress: WellbeingMetric.fromJson(_map(json['stress'])),
     );
   }
 }
@@ -245,9 +268,7 @@ class WellbeingMetric {
       maximum: _intOrNull(json['maximum']),
       trend: json['trend'] == null
           ? null
-          : TrendResult.fromJson(
-              _map(json['trend']),
-            ),
+          : TrendResult.fromJson(_map(json['trend'])),
     );
   }
 }
@@ -277,28 +298,39 @@ class SymptomAnalysis {
     required this.dates,
     required this.frequency,
     required this.occurrenceRate,
+    this.phaseDistribution = const {},
+    this.mostCommonPhase,
   });
 
   final List<DateTime> dates;
   final int frequency;
   final double? occurrenceRate;
 
+  /// Number of occurrences per phase (`phase_distribution`). Empty when the
+  /// backend omits it.
+  final Map<String, int> phaseDistribution;
+  final String? mostCommonPhase;
+
   factory SymptomAnalysis.fromJson(Map<String, dynamic> json) {
+    final distribution = json['phase_distribution'];
     return SymptomAnalysis(
       dates: _dateList(json['dates']),
       frequency: _int(json['frequency']),
-      occurrenceRate: _doubleOrNull(
-        json['occurrence_rate'],
-      ),
+      occurrenceRate: _doubleOrNull(json['occurrence_rate']),
+      phaseDistribution: distribution is Map
+          ? {
+              for (final entry in distribution.entries)
+                if (entry.value is num)
+                  entry.key as String: (entry.value as num).toInt(),
+            }
+          : const {},
+      mostCommonPhase: json['most_common_phase'] as String?,
     );
   }
 }
 
 class Correlations {
-  const Correlations({
-    required this.sleepMood,
-    required this.stressPain,
-  });
+  const Correlations({required this.sleepMood, required this.stressPain});
 
   final CorrelationResult? sleepMood;
   final CorrelationResult? stressPain;
@@ -307,23 +339,16 @@ class Correlations {
     return Correlations(
       sleepMood: json['sleep_mood'] == null
           ? null
-          : CorrelationResult.fromJson(
-              _map(json['sleep_mood']),
-            ),
+          : CorrelationResult.fromJson(_map(json['sleep_mood'])),
       stressPain: json['stress_pain'] == null
           ? null
-          : CorrelationResult.fromJson(
-              _map(json['stress_pain']),
-            ),
+          : CorrelationResult.fromJson(_map(json['stress_pain'])),
     );
   }
 }
 
 class CorrelationResult {
-  const CorrelationResult({
-    required this.correlation,
-    required this.pValue,
-  });
+  const CorrelationResult({required this.correlation, required this.pValue});
 
   final double correlation;
   final double pValue;
@@ -364,25 +389,18 @@ Map<String, dynamic> _map(Object? value) =>
 
 int _int(Object? value) => (value as num).toInt();
 
-int? _intOrNull(Object? value) =>
-    value == null ? null : _int(value);
+int? _intOrNull(Object? value) => value == null ? null : _int(value);
 
-double _double(Object? value) =>
-    (value as num).toDouble();
+double _double(Object? value) => (value as num).toDouble();
 
-double? _doubleOrNull(Object? value) =>
-    value == null ? null : _double(value);
+double? _doubleOrNull(Object? value) => value == null ? null : _double(value);
 
 DateTime? _dateOrNull(Object? value) {
-  return value == null
-      ? null
-      : DateTime.parse(value as String);
+  return value == null ? null : DateTime.parse(value as String);
 }
 
 List<int> _intList(Object? value) {
-  return (value as List<dynamic>)
-      .map(_int)
-      .toList();
+  return (value as List<dynamic>).map(_int).toList();
 }
 
 List<DateTime> _dateList(Object? value) {

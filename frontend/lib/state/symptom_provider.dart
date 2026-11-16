@@ -4,6 +4,8 @@ import '../data/models/daily_log_symptom.dart';
 import '../data/models/symptom_type.dart';
 import '../data/services/daily_log_symptom_service.dart';
 import '../data/services/symptom_type_service.dart';
+import 'analysis_provider.dart';
+import 'auth_provider.dart';
 
 final symptomTypesProvider = FutureProvider<List<SymptomType>>((ref) {
   return ref.read(symptomTypeServiceProvider).getSymptomTypes();
@@ -17,6 +19,7 @@ final dailyLogSymptomsProvider =
 class DailyLogSymptomsNotifier extends AsyncNotifier<List<DailyLogSymptom>> {
   @override
   Future<List<DailyLogSymptom>> build() {
+    ref.watch(authProvider.select((session) => session.user?.id));
     return ref.read(dailyLogSymptomServiceProvider).getDailyLogSymptoms();
   }
 
@@ -60,6 +63,7 @@ class DailyLogSymptomsNotifier extends AsyncNotifier<List<DailyLogSymptom>> {
             .deleteSymptom(relationship.id);
       }
     } finally {
+      ref.invalidate(analysisProvider);
       await refresh();
     }
   }

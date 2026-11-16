@@ -1,0 +1,9 @@
+# Flutter gen-l10n configuration.
+# Turkish is the template (source of truth) for the first release.
+# To add English later: create lib/l10n/app_en.arb with the same keys and
+# add Locale('en') to AppLocales.supported. No app logic changes needed.
+arb-dir: lib/l10n
+template-arb-file: app_tr.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

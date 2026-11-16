@@ -5,9 +5,7 @@ import 'package:frontend/app.dart';
 
 void main() {
   testWidgets('app boots with session loading UI', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const ProviderScope(child: CycleInsightApp()),
-    );
+    await tester.pumpWidget(const ProviderScope(child: CycleInsightApp()));
     await tester.pump();
 
     expect(find.byType(MaterialApp), findsOneWidget);

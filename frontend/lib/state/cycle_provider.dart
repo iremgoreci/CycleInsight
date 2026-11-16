@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/cycle.dart';
 import '../data/services/cycle_service.dart';
+import 'analysis_provider.dart';
+import 'auth_provider.dart';
 
 final cycleProvider = AsyncNotifierProvider<CycleNotifier, List<Cycle>>(
   CycleNotifier.new,
@@ -10,6 +12,7 @@ final cycleProvider = AsyncNotifierProvider<CycleNotifier, List<Cycle>>(
 class CycleNotifier extends AsyncNotifier<List<Cycle>> {
   @override
   Future<List<Cycle>> build() {
+    ref.watch(authProvider.select((session) => session.user?.id));
     return ref.read(cycleServiceProvider).getCycles();
   }
 
@@ -27,6 +30,7 @@ class CycleNotifier extends AsyncNotifier<List<Cycle>> {
     await ref
         .read(cycleServiceProvider)
         .createCycle(startDate: startDate, endDate: endDate);
+    ref.invalidate(analysisProvider);
     await refresh();
   }
 
@@ -38,11 +42,13 @@ class CycleNotifier extends AsyncNotifier<List<Cycle>> {
     await ref
         .read(cycleServiceProvider)
         .updateCycle(cycleId: cycleId, startDate: startDate, endDate: endDate);
+    ref.invalidate(analysisProvider);
     await refresh();
   }
 
   Future<void> deleteCycle(int cycleId) async {
     await ref.read(cycleServiceProvider).deleteCycle(cycleId);
+    ref.invalidate(analysisProvider);
     await refresh();
   }
 }

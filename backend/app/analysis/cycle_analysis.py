@@ -1,6 +1,7 @@
 from datetime import date
 from statistics import mean, median, stdev
 from scipy.stats import linregress
+import math
 
 def calculate_cycle_lengths(start_dates: list[date]) -> list[int]:
     """
@@ -106,6 +107,7 @@ def assess_cycle_regularity(cycle_lengths: list[int], age: int | None) -> str:
     return "irregular"
 
 
+
 def calculate_cycle_trend(cycle_lengths: list[int]) -> dict | None:
     if len(cycle_lengths) < 3:
         return None
@@ -115,8 +117,18 @@ def calculate_cycle_trend(cycle_lengths: list[int]) -> dict | None:
 
     result = linregress(x, y)
 
+    slope = result.slope
+    r_squared = result.rvalue ** 2
+    p_value = result.pvalue
+
+    if not all(
+        math.isfinite(value)
+        for value in [slope, r_squared, p_value]
+    ):
+        return None
+
     return {
-        "slope": result.slope,
-        "r_squared": result.rvalue ** 2,
-        "p_value": result.pvalue
+        "slope": slope,
+        "r_squared": r_squared,
+        "p_value": p_value,
     }

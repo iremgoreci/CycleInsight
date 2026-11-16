@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/app_theme.dart';
 import '../../widgets/profile_button.dart';
 import 'cycle_list_screen.dart';
+import '../../l10n/l10n.dart';
 
-/// Standalone screen for managing cycle records (start/end dates).
+/// Standalone screen for managing cycle records (period start/end dates).
 ///
-/// Cycle management is no longer a bottom-navigation tab in the new
-/// Home-first layout, but the existing CRUD screens and provider are fully
-/// reused here unchanged — only this thin Scaffold wrapper is new.
+/// Cycle management is not a bottom-navigation tab; the existing CRUD
+/// screens and provider are reused here.
 class CyclesHistoryScreen extends StatelessWidget {
   const CyclesHistoryScreen({super.key});
 
@@ -16,19 +17,20 @@ class CyclesHistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cycle history'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
+        title: Text(context.l10n.cycleHistoryTitle),
+        actions: [
+          TextButton.icon(
+            onPressed: () => context.push('/cycles/new'),
+            icon: const Icon(Icons.add, size: 18),
+            label: Text(context.l10n.cycleAddPeriod),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: AppSpacing.sm),
             child: ProfileButton(),
           ),
         ],
       ),
-      body: const CycleListScreen(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/cycles/new'),
-        child: const Icon(Icons.add),
-      ),
+      body: const SafeArea(top: false, child: CycleListScreen()),
     );
   }
 }

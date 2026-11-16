@@ -1,0 +1,827 @@
+{
+  "@@locale": "tr",
+  "appTitle": "CycleInsight",
+  "commonTryAgain": "Tekrar dene",
+  "commonRetry": "Yeniden dene",
+  "commonCancel": "Vazgeç",
+  "commonDelete": "Sil",
+  "commonEdit": "Düzenle",
+  "commonMore": "Diğer",
+  "commonSaveChanges": "Değişiklikleri kaydet",
+  "commonChange": "Değiştir",
+  "commonNotEnoughData": "Yeterli veri yok",
+  "commonEstimated": "tahmini",
+  "commonToday": "Bugün",
+  "commonYesterday": "Dün",
+  "commonTomorrow": "Yarın",
+  "relativeInDays": "{count, plural, =1{1 gün sonra} other{{count} gün sonra}}",
+  "@relativeInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{1 gün önce} other{{count} gün önce}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count, plural, =1{1 gün} other{{count} gün}}",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitDays": "gün",
+  "unitOutOfFive": "/ 5",
+  "semanticValue": "{label}: {value}",
+  "@semanticValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "errorGeneric": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+  "errorLoadTitle": "Yüklenemedi",
+  "errorNetwork": "Sunucuya ulaşılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
+  "errorServer": "Sunucu bu isteği tamamlayamadı. Lütfen tekrar deneyin.",
+  "errorSessionExpired": "Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.",
+  "errorInvalidCredentials": "E-posta adresi veya şifre hatalı.",
+  "errorEmailExists": "Bu e-posta adresiyle kayıtlı bir hesap zaten var.",
+  "errorInvalidInput": "Girilen bilgilerden bazıları geçersiz. Lütfen kontrol edin.",
+  "errorCycleDuplicateStart": "Bu başlangıç tarihine sahip bir döngü zaten kayıtlı.",
+  "errorEndBeforeStart": "Bitiş tarihi başlangıç tarihinden önce olamaz.",
+  "errorDailyLogExists": "Bu tarih için zaten bir günlük kayıt var.",
+  "errorDailyLogNotFound": "Bu günlük kayıt artık mevcut değil.",
+  "errorCycleNotFound": "Bu döngü artık mevcut değil.",
+  "errorNotFound": "İstenen kayıt bulunamadı.",
+  "navToday": "Bugün",
+  "navJournal": "Günlük",
+  "navInsights": "Analizler",
+  "fieldEmail": "E-posta",
+  "fieldPassword": "Şifre",
+  "fieldFirstName": "Ad",
+  "fieldLastName": "Soyad",
+  "fieldDateOfBirth": "Doğum tarihi",
+  "passwordShow": "Şifreyi göster",
+  "passwordHide": "Şifreyi gizle",
+  "validationEmailRequired": "E-posta adresinizi girin",
+  "validationPasswordRequired": "Şifrenizi girin",
+  "validationNewPasswordRequired": "Bir şifre belirleyin",
+  "validationFirstNameRequired": "Adınızı girin",
+  "validationLastNameRequired": "Soyadınızı girin",
+  "validationDateOfBirthRequired": "Doğum tarihinizi seçin",
+  "loginTitle": "Tekrar hoş geldiniz",
+  "loginLede": "Kayıtlarınıza kaldığınız yerden devam etmek için giriş yapın.",
+  "loginSubmit": "Giriş yap",
+  "loginFailed": "Giriş yapılamadı",
+  "loginNewPrompt": "CycleInsight'ta yeni misiniz?",
+  "loginCreateAccount": "Hesap oluşturun",
+  "registerTitle": "Hesabınızı oluşturun",
+  "registerLede": "Döngü kayıtlarınız yalnızca kendi hesabınıza bağlı kalır.",
+  "registerSectionAbout": "Hakkınızda",
+  "registerSectionAccount": "Hesap",
+  "registerDobHelp": "Döngü düzenliliğini yaşınıza göre değerlendirmek için kullanılır.",
+  "registerDobNotSet": "Doğum tarihi, seçilmedi",
+  "registerDobSemantic": "Doğum tarihi, {date}",
+  "@registerDobSemantic": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "registerSubmit": "Hesap oluştur",
+  "registerFailed": "Kayıt tamamlanamadı",
+  "registerHaveAccount": "Zaten hesabınız var mı?",
+  "registerSignIn": "Giriş yapın",
+  "profileAccount": "Hesap",
+  "profileBorn": "Doğum tarihi: {date}",
+  "@profileBorn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileYourRecords": "Kayıtlarınız",
+  "profileCycleHistory": "Döngü geçmişi",
+  "profileCycleHistorySubtitle": "Kayıtlı adet dönemlerini görüntüleyin ve yönetin",
+  "profileLogHistory": "Günlük kayıt geçmişi",
+  "profileLogHistorySubtitle": "Önceki kayıtlarınızı inceleyin",
+  "profileLearn": "Döngünüzü tanıyın",
+  "profileLearnSubtitle": "Dört faz, açıklamalarıyla",
+  "profileSignOut": "Çıkış yap",
+  "phaseMenstrual": "Menstrüel",
+  "phaseFollicular": "Foliküler",
+  "phaseOvulatory": "Ovülasyon",
+  "phaseLuteal": "Luteal",
+  "phaseMenstrualName": "Menstrüel faz",
+  "phaseFollicularName": "Foliküler faz",
+  "phaseOvulatoryName": "Ovülasyon fazı",
+  "phaseLutealName": "Luteal faz",
+  "phaseMenstrualShort": "Mens.",
+  "phaseFollicularShort": "Fol.",
+  "phaseOvulatoryShort": "Ovül.",
+  "phaseLutealShort": "Lut.",
+  "metricBleeding": "Kanama",
+  "metricMood": "Ruh hali",
+  "metricPain": "Ağrı",
+  "metricSleep": "Uyku",
+  "metricSleepQuality": "Uyku kalitesi",
+  "metricStress": "Stres",
+  "bleedingLevel0": "Yok",
+  "bleedingLevel1": "Çok hafif",
+  "bleedingLevel2": "Hafif",
+  "bleedingLevel3": "Orta",
+  "bleedingLevel4": "Şiddetli",
+  "bleedingLevel5": "Çok şiddetli",
+  "moodLevel1": "Çok kötü",
+  "moodLevel2": "Kötü",
+  "moodLevel3": "Orta",
+  "moodLevel4": "İyi",
+  "moodLevel5": "Çok iyi",
+  "painLevel0": "Yok",
+  "painLevel1": "Çok düşük",
+  "painLevel2": "Düşük",
+  "painLevel3": "Orta",
+  "painLevel4": "Yüksek",
+  "painLevel5": "Çok yüksek",
+  "sleepLevel0": "Uyumadım",
+  "sleepLevel1": "Çok kötü",
+  "sleepLevel2": "Kötü",
+  "sleepLevel3": "Orta",
+  "sleepLevel4": "İyi",
+  "sleepLevel5": "Çok iyi",
+  "stressLevel0": "Yok",
+  "stressLevel1": "Çok düşük",
+  "stressLevel2": "Düşük",
+  "stressLevel3": "Orta",
+  "stressLevel4": "Yüksek",
+  "stressLevel5": "Çok yüksek",
+  "greetingMorning": "Günaydın",
+  "greetingAfternoon": "İyi günler",
+  "greetingEvening": "İyi akşamlar",
+  "greetingWithName": "{greeting}, {name}",
+  "@greetingWithName": {
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeReadingCycle": "Döngünüz hazırlanıyor…",
+  "homeOverviewUnavailable": "Döngü özeti yüklenemedi",
+  "homeCycleDay": "Döngü günü",
+  "homeOfAboutDays": "~{days} günlük döngü",
+  "@homeOfAboutDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNoCycleYet": "Henüz döngü yok",
+  "homePhaseNotEstimated": "Faz tahmin edilmedi",
+  "homeDialNoCycle": "Henüz kayıtlı döngü yok",
+  "homeDialDay": "Döngünün {day}. günü",
+  "@homeDialDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDialOfAbout": "yaklaşık {days} günlük döngü",
+  "@homeDialOfAbout": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "homeAddFirstPeriodPrompt": "Bugünün döngünüzdeki yerini görmek için son adet döneminizin ilk gününü kaydedin.",
+  "homeAddPeriod": "Adet dönemi ekle",
+  "homeNeedSecondPeriod": "Döngü uzunluğunuzu ve fazlarınızı tahmin etmek için bir adet başlangıç tarihi daha ekleyin.",
+  "homePastEstimate": "{day}. gün, tahmini döngü uzunluğunuzu {over, plural, =1{1 gün} other{{over} gün}} geçti. Adetiniz başladıysa kaydedin.",
+  "@homePastEstimate": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "over": {
+        "type": "int"
+      }
+    }
+  },
+  "homeAddEndDate": "Kadranda menstrüel fazı göstermek için son adet döneminize bitiş tarihi ekleyin.",
+  "homeRecordPeriod": "Adet dönemi kaydet",
+  "homeOpenCycleHistory": "Döngü geçmişini aç",
+  "homeComingUp": "Yaklaşanlar",
+  "homeComingUpSubtitle": "Kayıtlı döngülerinize dayalı tahminler",
+  "homeNextPeriod": "Sonraki adet",
+  "homeOvulation": "Ovülasyon",
+  "homeOvulationWindow": "Pencere: döngünün {start}–{end}. günleri",
+  "@homeOvulationWindow": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSeeInsights": "Analizlere git",
+  "homeTodayCheckIn": "Bugünün kaydı",
+  "homeCheckInPrompt": "Bugün nasılsınız?",
+  "homeCheckInPromptBody": "Kanama, ruh hali, ağrı, uyku ve stres; bir dakikadan kısa sürer. Her kayıt, Analizler'deki örüntülere katkı sağlar.",
+  "homeCheckInButton": "Kayıt ekle",
+  "homeCheckInRecorded": "Kaydedildi",
+  "homeCheckInLoadError": "Bugünün kaydı yüklenemedi.",
+  "homeReadAboutPhase": "Bu faz hakkında okuyun",
+  "homeLearnFallback": "Her fazda neler olduğu ve CycleInsight'ın fazları nasıl tahmin ettiği.",
+  "confidenceHigh": "Yüksek",
+  "confidenceMedium": "Orta",
+  "confidenceLow": "Düşük",
+  "confidenceLabel": "Güven düzeyi: {tier}",
+  "@confidenceLabel": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "logNewTitle": "Yeni kayıt",
+  "logEditTitle": "Kaydı düzenle",
+  "logSectionBody": "Beden",
+  "logSectionMind": "Zihin ve dinlenme",
+  "logSymptoms": "Semptomlar",
+  "logSymptomsSubtitle": "Fark ettiklerinizi seçin",
+  "logSymptomsSelected": "{count} seçildi",
+  "@logSymptomsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logNotes": "Notlar",
+  "logNotesHint": "Bugünle ilgili eklemek istedikleriniz (isteğe bağlı)",
+  "logSave": "Kaydı kaydet",
+  "logSymptomsLoading": "Semptomlar yükleniyor…",
+  "logSymptomsError": "Semptomlar yüklenemedi.",
+  "logNoSymptomTypes": "Kullanılabilir semptom türü yok.",
+  "logSavedButSymptomsFailed": "Günlük kayıt kaydedildi ancak bazı semptomlar kaydedilemedi. Lütfen tekrar deneyin.",
+  "logCreateFailed": "Günlük kayıt oluşturulamadı",
+  "logUpdateFailed": "Günlük kayıt güncellenemedi",
+  "logLoadFailed": "Günlük kayıtlar yüklenemedi",
+  "logDeleteFailed": "Günlük kayıt silinemedi",
+  "journalEyebrow": "Günlük kayıt",
+  "journalTitle": "Günlük",
+  "journalCount": "{count} kayıt",
+  "@journalCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalNew": "Yeni",
+  "journalUnavailable": "Günlük yüklenemedi",
+  "journalEmptyTitle": "İlk kaydınızı oluşturun",
+  "journalEmptyBody": "Bugün nasıl hissettiğinizi kaydedin: kanama, ruh hali, ağrı, uyku, stres ve semptomlar. Kayıtlar burada aylara göre listelenir.",
+  "journalEmptyAction": "Günlük kayıt ekle",
+  "journalBleeding": "Kanama · {level}",
+  "@journalBleeding": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "journalDeleteTitle": "Günlük kayıt silinsin mi?",
+  "journalDeleteBody": "{date} tarihli kayıt ve semptomları silinecek.",
+  "@journalDeleteBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "journalDeleted": "Kayıt silindi",
+  "cycleHistoryTitle": "Döngü geçmişi",
+  "cycleAddPeriod": "Adet ekle",
+  "cycleUnavailable": "Döngü geçmişi yüklenemedi",
+  "cycleLoadFailed": "Döngüler yüklenemedi",
+  "cycleEmptyTitle": "İlk adet döneminizi ekleyin",
+  "cycleEmptyBody": "Adet başlangıç tarihleri döngünüzdeki yerinizi belirler. İki veya daha fazla tarih, CycleInsight'ın döngü uzunluğunuzu tahmin etmesini sağlar.",
+  "cycleEmptyAction": "Adet dönemi ekle",
+  "cycleRecordedIntro": "{count} adet dönemi kayıtlı. Tarihlerini düzeltmek için birine dokunun.",
+  "@cycleRecordedIntro": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleLatest": "En son",
+  "cyclePeriodEndMissing": "Adet bitişi kaydedilmedi",
+  "cyclePeriodDays": "Adet · {count} gün",
+  "@cyclePeriodDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleLengthDays": "{days} günlük döngü",
+  "@cycleLengthDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleDeleteTitle": "Döngü silinsin mi?",
+  "cycleDeleteBody": "{date} tarihinde başlayan döngü, geçmişinizden ve analizlerinizden kaldırılacak.",
+  "@cycleDeleteBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cycleDeleteFailed": "Döngü silinemedi",
+  "cycleNewTitle": "Yeni adet dönemi",
+  "cycleEditTitle": "Adet dönemini düzenle",
+  "cycleFormIntro": "Döngü, adetinizin ilk günü başlar. Bildiğiniz tarihleri kaydedin; bitiş tarihini daha sonra da ekleyebilirsiniz.",
+  "cycleStarted": "Adet başlangıcı",
+  "cycleEnded": "Adet bitişi · isteğe bağlı",
+  "cycleNotRecorded": "Kaydedilmedi",
+  "cycleEndHelp": "Kadranda menstrüel fazı göstermek için kullanılır",
+  "cycleBleedingDays": "{count} gün kanama",
+  "@cycleBleedingDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cycleClearEnd": "Bitiş tarihini temizle (adet devam ediyor)",
+  "cycleSave": "Adet dönemini kaydet",
+  "cycleCreateFailed": "Döngü oluşturulamadı",
+  "cycleUpdateFailed": "Döngü güncellenemedi",
+  "learnEyebrow": "Öğren",
+  "learnTitle": "Döngünüz, dört fazda",
+  "learnExampleCycle": "Örnek bir 28 günlük döngü",
+  "learnYouAre": "Siz: {phase}",
+  "@learnYouAre": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "learnNow": "Şu an",
+  "learnDayOne": "1. gün",
+  "learnTapHint": "Sizin döngünüz daha kısa veya daha uzun olabilir. Okumak için bir faza dokunun.",
+  "learnPhaseOf": "Faz {number} / 4",
+  "@learnPhaseOf": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "learnWhen": "Ne zaman",
+  "learnWhatIsHappening": "Neler oluyor",
+  "learnWhatYouMightNotice": "Neler fark edebilirsiniz",
+  "learnInApp": "CycleInsight'ta",
+  "learnPrevious": "Önceki",
+  "learnNext": "Sonraki",
+  "learnSources": "Kaynaklar",
+  "insightsEyebrow": "Kişisel rapor",
+  "insightsTitle": "Analizler",
+  "insightsCycles": "{count} döngü",
+  "@insightsCycles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsLogs": "{count} günlük kayıt",
+  "@insightsLogs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsBasedOn": "Kaynak: {parts}",
+  "@insightsBasedOn": {
+    "placeholders": {
+      "parts": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsAnd": " ve ",
+  "insightsBuilding": "Raporunuz hazırlanıyor…",
+  "insightsUnavailable": "Analizler yüklenemedi",
+  "insightsLoadFailed": "Analiz yüklenemedi",
+  "insightsDisclaimer": "Bu özetler kendi kayıtlarınızdaki örüntüleri açıklar. Fazlar ve tarihler tahmindir; bağlantılar neden-sonuç değil, ilişki gösterir. CycleInsight tıbbi teşhis koymaz.",
+  "digestTitle": "Kayıtlarınız ne gösteriyor",
+  "digestEmpty": "Birkaç döngü ve günlük kayıt girdiğinizde analizler burada görünür. Kayıt tutmaya devam edin; örüntülerin oluşması biraz zaman alır.",
+  "insightCyclePatternTitle": "Döngü örüntüsü",
+  "insightCycleRegular": "Kayıtlı döngü uzunluklarınız görece tutarlı görünüyor.",
+  "insightCycleIrregular": "Kayıtlı döngü uzunluklarınızda bir miktar değişkenlik var.",
+  "insightCycleTrendTitle": "Döngü uzunluğu eğilimi",
+  "insightCycleTrendUp": "Kayıtlı döngü uzunluklarınız zaman içinde artış eğilimi gösteriyor.",
+  "insightCycleTrendDown": "Kayıtlı döngü uzunluklarınız zaman içinde azalma eğilimi gösteriyor.",
+  "insightPredictionTitle": "Döngü tahmini",
+  "insightPredictionLow": "Tahmini döngü uzunluğunuz {days} gün; ancak bu tahminin daha güvenilir olması için daha fazla döngü verisi gerekiyor.",
+  "@insightPredictionLow": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "insightPredictionBased": "Kayıtlı döngülerinize göre tahmini döngü uzunluğunuz {days} gün.",
+  "@insightPredictionBased": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "insightBleedingIntensityTitle": "Kanama yoğunluğu",
+  "insightBleedingHighAverage": "Kayıtlı kanama düzeyleriniz ortalamada görece yüksek.",
+  "insightPeakBleedingTitle": "En yüksek kanama düzeyi",
+  "insightPeakBleeding": "En az bir kayıtlı günde yüksek bir kanama düzeyi kaydettiniz.",
+  "insightSymptomTitle": "Tekrarlayan semptomlar",
+  "insightSymptomWithPhase": "{symptom} {count} kez kaydedildi; en sık görüldüğü faz: {phase}.",
+  "@insightSymptomWithPhase": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "insightSymptomNoPhase": "{symptom} {count} kez kaydedildi.",
+  "@insightSymptomNoPhase": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightWellbeingTitle": "{metric} eğilimi",
+  "@insightWellbeingTitle": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      }
+    }
+  },
+  "insightWellbeingUp": "Kayıtlı {metric} değerleriniz artış eğilimi gösteriyor.",
+  "@insightWellbeingUp": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      }
+    }
+  },
+  "insightWellbeingDown": "Kayıtlı {metric} değerleriniz azalma eğilimi gösteriyor.",
+  "@insightWellbeingDown": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      }
+    }
+  },
+  "insightMetricMood": "ruh hali",
+  "insightMetricPain": "ağrı",
+  "insightMetricSleep": "uyku",
+  "insightMetricStress": "stres",
+  "insightSleepMoodPositive": "Kayıtlı uyku kaliteniz, ruh halinizle pozitif yönde ilişkili görünüyor.",
+  "insightSleepMoodNegative": "Kayıtlı uyku kaliteniz, ruh halinizle negatif yönde ilişkili görünüyor.",
+  "insightStressPainPositive": "Kayıtlı stres düzeyleriniz, ağrı düzeylerinizle pozitif yönde ilişkili görünüyor.",
+  "insightStressPainNegative": "Kayıtlı stres düzeyleriniz, ağrı düzeylerinizle negatif yönde ilişkili görünüyor.",
+  "sectionCycleLength": "Döngü uzunluğu",
+  "sectionCycleLengthCaption": "Bir adet başlangıcından bir sonrakine kadar geçen gün sayısı",
+  "sectionCycleLengthEmpty": "En az iki adet başlangıç tarihi kaydettiğinizde döngü uzunluğu burada görünür.",
+  "statAverage": "Ortalama",
+  "statVariability": "Değişkenlik",
+  "statStandardDeviation": "Standart sapma",
+  "statRange": "Aralık",
+  "statRangeDays": "{min}–{max} gün",
+  "@statRangeDays": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "chartMedian": "Medyan {value} gün",
+  "@chartMedian": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "chartCycleStarting": "{date} tarihinde başlayan döngü",
+  "@chartCycleStarting": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "chartCycleNumber": "Döngü {number} / {total}",
+  "@chartCycleNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "chartDaysPoint": "{label}: {days} gün",
+  "@chartDaysPoint": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "chartSemantic": "Döngü uzunluğu grafiği. {summary}",
+  "@chartSemantic": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "regularityLabel": "Düzenlilik",
+  "regularityRegular": "Düzenli",
+  "regularityIrregular": "Düzensiz",
+  "regularityNotAssessed": "Henüz değerlendirilmedi",
+  "regularityExplainRegular": "Kayıtlı döngü uzunluklarınız tutarlı bir aralıkta kalıyor.",
+  "regularityExplainIrregular": "Kayıtlı döngü uzunluklarınız olağandan daha fazla değişkenlik gösteriyor.",
+  "regularityExplainNotAssessed": "Düzenlilik, yaş grubunuz için henüz değerlendirilmiyor.",
+  "regularityExplainInsufficient": "Düzenlilik, daha fazla döngü kaydedildiğinde değerlendirilir.",
+  "lengthOverTime": "Zaman içindeki uzunluk",
+  "trendUp": "Artıyor",
+  "trendDown": "Azalıyor",
+  "trendNone": "Belirgin eğilim yok",
+  "trendUnavailable": "Yeterli veri yok",
+  "trendNeedThree": "En az üç döngü uzunluğu gerekir.",
+  "trendNoneDetail": "Döngüleriniz boyunca istatistiksel olarak belirgin bir değişim yok.",
+  "trendDetail": "Kayıtlı döngüleriniz boyunca tutarlı bir değişim var.",
+  "sectionPredictions": "Tahminler",
+  "sectionPredictionsCaption": "Kayıtlı geçmişinizden yapılan tahminlerdir; kesinlik içermez",
+  "predictionsEmptyNoCycle": "Tahmini tarihleri burada görmek için adet tarihlerinizi kaydedin.",
+  "predictionsEmptyDay": "Döngünüzün {day}. günündesiniz. Tahminler için en az iki adet başlangıç tarihi gerekir.",
+  "@predictionsEmptyDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "predictionsToday": "Bugün döngünüzün {day}. günü.",
+  "@predictionsToday": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "predictionsCurrentPhase": "Şu anki faz: {phase}.",
+  "@predictionsCurrentPhase": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "predictionsNextPeriod": "Sonraki adet",
+  "predictionsOvulation": "Ovülasyon",
+  "predictionsCycleDay": "Döngünün {day}. günü",
+  "@predictionsCycleDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "predictionsWindow": "pencere: {start}–{end}. günler",
+  "@predictionsWindow": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
+  "predictionsEstimatedLength": "Tahmini döngü uzunluğu",
+  "predictionsMedianNote": "Kayıtlı döngülerinizin medyanı",
+  "predictionsConfidenceBasis": "Kaç döngü kaydettiğinize ve uzunluklarının ne kadar tutarlı olduğuna dayanır.",
+  "sectionWellbeing": "İyi oluş",
+  "sectionWellbeingCaption": "0–5 ölçeğinde kaydettiğiniz aralık ve ortalama",
+  "wellbeingEmpty": "Ruh hali, uyku, ağrı ve stres özetleri ilk kayıtlarınızdan sonra görünür.",
+  "wellbeingHigherBetter": "yüksek olması daha iyi",
+  "wellbeingHigherMore": "yüksek değer daha fazlası",
+  "wellbeingAverageShort": "ort.",
+  "wellbeingRange": "Aralık {min}–{max}",
+  "@wellbeingRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "wellbeingMedian": "medyan {value}",
+  "@wellbeingMedian": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "wellbeingNoData": "Henüz veri yok",
+  "wellbeingKeyRange": "Kaydedilen en düşükten en yükseğe",
+  "wellbeingKeyAverage": "Ortalama",
+  "wellbeingSemantic": "{metric}: ortalama {average} / 5, aralık {min}–{max}. Eğilim: {trend}.",
+  "@wellbeingSemantic": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "trend": {
+        "type": "String"
+      }
+    }
+  },
+  "wellbeingSemanticNoData": "{metric}: veri yok. Eğilim: {trend}.",
+  "@wellbeingSemanticNoData": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      },
+      "trend": {
+        "type": "String"
+      }
+    }
+  },
+  "wellbeingByPhase": "Faza göre",
+  "wellbeingByPhaseCaption": "Her tahmini faza denk gelen kayıtların ortalaması. Koyu hücreler daha yüksek değerleri gösterir.",
+  "wellbeingCellNoData": "veri yok",
+  "sectionSymptoms": "Semptomlar",
+  "sectionSymptomsCaption": "Her birinin ne sıklıkla ve hangi tahmini fazda kaydedildiği",
+  "symptomsEmpty": "Henüz semptom kaydedilmedi. Ne sıklıkla ve hangi fazda görüldüklerini görmek için bir kayıtta semptom seçin.",
+  "symptomsNamesUnavailable": "Semptom adları şu anda kullanılamıyor.",
+  "symptomsUnknown": "Bilinmeyen semptom",
+  "symptomsMostly": "En sık: {phase}",
+  "@symptomsMostly": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "symptomsTimes": "{count} kez",
+  "@symptomsTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "symptomsOfLoggedDays": "kayıtlı günlerin {percent}",
+  "@symptomsOfLoggedDays": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "symptomsByPhase": "Faza göre: {summary}",
+  "@symptomsByPhase": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "sectionBleeding": "Kanama",
+  "sectionBleedingCaption": "Kanama girilen tüm kayıtlardan",
+  "bleedingEmpty": "Henüz kanama kaydedilmedi. Burada bir özet görmek için bir kayıtta kanama düzeyini girin.",
+  "bleedingDaysLogged": "Kaydedilen gün",
+  "bleedingAverageLevel": "Ortalama düzey",
+  "bleedingPeakLevel": "En yüksek düzey",
+  "bleedingIntensityScore": "Yoğunluk puanı",
+  "bleedingIntensityNote": "Kaydedilen düzeylerin toplamı",
+  "sectionConnections": "Bağlantılar",
+  "sectionConnectionsCaption": "İki ölçümün kayıtlarınızda birlikte nasıl değiştiği; neden-sonuç değil, ilişki gösterir",
+  "correlationSleepMood": "Uyku ve ruh hali",
+  "correlationStressPain": "Stres ve ağrı",
+  "correlationNeedData": "Değerleri farklılık gösteren en az üç kayıt gerekir.",
+  "correlationNegligible": "İhmal edilebilir",
+  "correlationWeak": "Zayıf",
+  "correlationModerate": "Orta",
+  "correlationStrong": "Güçlü",
+  "correlationStrengthPositive": "{strength}, pozitif",
+  "@correlationStrengthPositive": {
+    "placeholders": {
+      "strength": {
+        "type": "String"
+      }
+    }
+  },
+  "correlationStrengthNegative": "{strength}, negatif",
+  "@correlationStrengthNegative": {
+    "placeholders": {
+      "strength": {
+        "type": "String"
+      }
+    }
+  },
+  "correlationSleepMoodNone": "Kayıtlarınızda uyku kalitesi ile ruh hali arasında belirgin bir ilişki yok.",
+  "correlationSleepMoodUp": "Uyku kalitenizin daha yüksek olduğu günlerde ruh haliniz de daha iyi olma eğilimindeydi.",
+  "correlationSleepMoodDown": "Uyku kalitenizin daha yüksek olduğu günlerde ruh haliniz daha kötü olma eğilimindeydi.",
+  "correlationStressPainNone": "Kayıtlarınızda stres ile ağrı arasında belirgin bir ilişki yok.",
+  "correlationStressPainUp": "Stresinizin daha yüksek olduğu günlerde ağrınız da daha yüksek olma eğilimindeydi.",
+  "correlationStressPainDown": "Stresinizin daha yüksek olduğu günlerde ağrınız daha düşük olma eğilimindeydi.",
+  "correlationStats": "Spearman r = {r} · p = {p}",
+  "@correlationStats": {
+    "placeholders": {
+      "r": {
+        "type": "String"
+      },
+      "p": {
+        "type": "String"
+      }
+    }
+  },
+  "correlationMaybeChance": "tesadüf olabilir",
+  "correlationSemantic": "{title}, korelasyon {r}",
+  "@correlationSemantic": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "r": {
+        "type": "String"
+      }
+    }
+  }
+}

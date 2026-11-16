@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/errors/api_exception.dart';
+import '../../core/theme/app_theme.dart';
 import '../../state/auth_provider.dart';
+import '../../widgets/app_feedback.dart';
+import 'auth_layout.dart';
+import '../../core/presentation/error_messages.dart';
+import '../../l10n/l10n.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -36,17 +41,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(authProvider.notifier).login(
+      await ref
+          .read(authProvider.notifier)
+          .login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
     } on ApiException catch (error) {
       if (mounted) {
-        setState(() => _errorMessage = error.message);
+        setState(
+          () => _errorMessage = ErrorText.of(
+            context.l10n,
+            error,
+            fallback: context.l10n.loginFailed,
+          ),
+        );
       }
     } catch (_) {
       if (mounted) {
-        setState(() => _errorMessage = 'Sign in failed');
+        setState(() => _errorMessage = context.l10n.loginFailed);
       }
     } finally {
       if (mounted) {
@@ -57,13 +70,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign in')),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
+    final l10n = context.l10n;
+    return AuthLayout(
+      title: l10n.loginTitle,
+      lede: l10n.loginLede,
+      footer: AuthSwitchLink(
+        prompt: l10n.loginNewPrompt,
+        action: l10n.loginCreateAccount,
+        onPressed: _isSubmitting ? null : () => context.go('/register'),
+      ),
+      children: [
+        Form(
+          key: _formKey,
+          child: AutofillGroup(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -71,60 +90,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: _emailController,
                   enabled: !_isSubmitting,
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.email],
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(labelText: l10n.fieldEmail),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Enter your email';
+                      return l10n.validationEmailRequired;
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+                const SizedBox(height: AppSpacing.sm),
+                PasswordField(
                   controller: _passwordController,
                   enabled: !_isSubmitting,
-                  obscureText: true,
                   autofillHints: const [AutofillHints.password],
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _isSubmitting ? null : _submit(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter your password';
+                      return l10n.validationPasswordRequired;
                     }
                     return null;
                   },
                 ),
                 if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  InlineMessage(message: _errorMessage!),
                 ],
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 FilledButton(
                   onPressed: _isSubmitting ? null : _submit,
                   child: _isSubmitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Sign in'),
-                ),
-                TextButton(
-                  onPressed: _isSubmitting
-                      ? null
-                      : () => context.go('/register'),
-                  child: const Text('Create an account'),
+                      ? const ButtonSpinner(color: AppColors.primary)
+                      : Text(l10n.loginSubmit),
                 ),
               ],
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

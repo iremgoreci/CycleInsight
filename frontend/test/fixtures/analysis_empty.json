@@ -1,0 +1,96 @@
+{
+ "cycle": {
+  "cycle_lengths": [],
+  "average_length": null,
+  "median_length": null,
+  "variability": null,
+  "range": null,
+  "consecutive_differences": null,
+  "regularity": "insufficient_data",
+  "trend": null
+ },
+ "bleeding": {
+  "period_duration": 0,
+  "average_level": null,
+  "median_level": null,
+  "peak_level": null,
+  "intensity_score": 0
+ },
+ "phase": {
+  "cycle_day": null,
+  "current_phase": null,
+  "wellbeing": {
+   "menstrual": {
+    "mood": null,
+    "pain": null,
+    "sleep": null,
+    "stress": null
+   },
+   "follicular": {
+    "mood": null,
+    "pain": null,
+    "sleep": null,
+    "stress": null
+   },
+   "ovulatory": {
+    "mood": null,
+    "pain": null,
+    "sleep": null,
+    "stress": null
+   },
+   "luteal": {
+    "mood": null,
+    "pain": null,
+    "sleep": null,
+    "stress": null
+   }
+  }
+ },
+ "predictions": {
+  "estimated_cycle_length": null,
+  "next_period_date": null,
+  "ovulation_day": null,
+  "ovulation_date": null,
+  "ovulation_window": null,
+  "confidence": {
+   "score": 0.0,
+   "tier": "low"
+  }
+ },
+ "wellbeing": {
+  "mood": {
+   "average": null,
+   "median": null,
+   "minimum": null,
+   "maximum": null,
+   "trend": null
+  },
+  "pain": {
+   "average": null,
+   "median": null,
+   "minimum": null,
+   "maximum": null,
+   "trend": null
+  },
+  "sleep": {
+   "average": null,
+   "median": null,
+   "minimum": null,
+   "maximum": null,
+   "trend": null
+  },
+  "stress": {
+   "average": null,
+   "median": null,
+   "minimum": null,
+   "maximum": null,
+   "trend": null
+  }
+ },
+ "symptoms": {},
+ "correlations": {
+  "sleep_mood": null,
+  "stress_pain": null
+ },
+ "insights": []
+}

@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/errors/api_exception.dart';
+import '../../core/presentation/formatters.dart';
+import '../../core/theme/app_theme.dart';
 import '../../data/models/daily_log.dart';
 import '../../data/models/daily_log_symptom.dart';
 import '../../data/models/symptom_type.dart';
-import '../../core/theme/app_theme.dart';
 import '../../state/daily_log_provider.dart';
 import '../../state/symptom_provider.dart';
+import '../../widgets/app_feedback.dart';
+import '../../widgets/level_scale.dart';
 import '../../widgets/profile_button.dart';
 import 'daily_log_labels.dart';
-import 'daily_log_list_screen.dart';
+import '../../core/presentation/error_messages.dart';
+import '../../l10n/l10n.dart';
 
 class DailyLogFormScreen extends ConsumerStatefulWidget {
   const DailyLogFormScreen({super.key, this.dailyLog});
@@ -25,8 +28,6 @@ class DailyLogFormScreen extends ConsumerStatefulWidget {
 }
 
 class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
-  static final _displayDateFormat = DateFormat.yMMMd();
-
   late DateTime _logDate;
   late int _bleedingLevel;
   late int _moodLevel;
@@ -132,17 +133,22 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
       if (mounted) {
         setState(
           () => _errorMessage = _createdDailyLog == null
-              ? dailyLogUserFacingMessage(error)
-              : 'Daily log saved, but some symptoms could not be saved. '
-                    'Please try again.',
+              ? ErrorText.of(
+                  context.l10n,
+                  error,
+                  fallback: _isEditing
+                      ? context.l10n.logUpdateFailed
+                      : context.l10n.logCreateFailed,
+                )
+              : context.l10n.logSavedButSymptomsFailed,
         );
       }
     } catch (_) {
       if (mounted) {
         setState(
           () => _errorMessage = _isEditing
-              ? 'Unable to update daily log'
-              : 'Unable to create daily log',
+              ? context.l10n.logUpdateFailed
+              : context.l10n.logCreateFailed,
         );
       }
     } finally {
@@ -160,108 +166,131 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
         symptomTypes.hasValue &&
         (!_isOriginalEdit ||
             (relationships.hasValue && _hasLoadedInitialSymptoms));
+    final enabled = !_isSubmitting;
+    final l10n = context.l10n;
+    final labels = DailyLogLabels(l10n);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit daily log' : 'New daily log'),
+        title: Text(_isEditing ? l10n.logEditTitle : l10n.logNewTitle),
         actions: const [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: EdgeInsets.only(right: AppSpacing.sm),
             child: ProfileButton(),
           ),
         ],
       ),
       body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            AppSpacing.xs,
+            AppSpacing.gutter,
+            AppSpacing.xxl,
+          ),
           children: [
-            Card(
-              child: ListTile(
-                title: const Text('Date'),
-                subtitle: Text(_displayDateFormat.format(_logDate)),
-                trailing: const Icon(Icons.edit_calendar_outlined),
-                enabled: !_isSubmitting,
-                onTap: _isSubmitting ? null : _pickDate,
-              ),
+            _DateHeader(date: _logDate, enabled: enabled, onChange: _pickDate),
+            const SizedBox(height: AppSpacing.xl),
+            _FormSection(
+              title: l10n.logSectionBody,
+              children: [
+                LevelScale(
+                  title: l10n.metricBleeding,
+                  icon: Icons.water_drop_outlined,
+                  labels: labels.bleeding,
+                  value: _bleedingLevel,
+                  color: MetricColors.bleeding,
+                  enabled: enabled,
+                  onChanged: (value) => setState(() => _bleedingLevel = value),
+                ),
+                LevelScale(
+                  title: l10n.metricPain,
+                  icon: Icons.bolt_outlined,
+                  labels: labels.pain,
+                  value: _painLevel,
+                  color: MetricColors.pain,
+                  enabled: enabled,
+                  onChanged: (value) => setState(() => _painLevel = value),
+                ),
+              ],
             ),
-            const SizedBox(height: AppSpacing.lg),
-            Text('How are you feeling today?',
-                style: Theme.of(context).textTheme.titleMedium),
-            _LevelSelector(
-              title: 'Bleeding',
-              icon: Icons.water_drop_outlined,
-              values: DailyLogLabels.bleeding,
-              selectedValue: _bleedingLevel,
-              enabled: !_isSubmitting,
-              onChanged: (value) => setState(() => _bleedingLevel = value),
+            const SizedBox(height: AppSpacing.xl),
+            _FormSection(
+              title: l10n.logSectionMind,
+              children: [
+                LevelScale(
+                  title: l10n.metricMood,
+                  icon: Icons.sentiment_satisfied_outlined,
+                  labels: labels.mood,
+                  value: _moodLevel,
+                  color: MetricColors.mood,
+                  enabled: enabled,
+                  onChanged: (value) => setState(() => _moodLevel = value),
+                ),
+                LevelScale(
+                  title: l10n.metricSleepQuality,
+                  icon: Icons.bedtime_outlined,
+                  labels: labels.sleep,
+                  value: _sleepQuality,
+                  color: MetricColors.sleep,
+                  enabled: enabled,
+                  onChanged: (value) => setState(() => _sleepQuality = value),
+                ),
+                LevelScale(
+                  title: l10n.metricStress,
+                  icon: Icons.waves_outlined,
+                  labels: labels.stress,
+                  value: _stressLevel,
+                  color: MetricColors.stress,
+                  enabled: enabled,
+                  onChanged: (value) => setState(() => _stressLevel = value),
+                ),
+              ],
             ),
-            _LevelSelector(
-              title: 'Mood',
-              icon: Icons.mood_outlined,
-              values: DailyLogLabels.mood,
-              selectedValue: _moodLevel,
-              enabled: !_isSubmitting,
-              onChanged: (value) => setState(() => _moodLevel = value),
-            ),
-            _LevelSelector(
-              title: 'Pain',
-              icon: Icons.bolt_outlined,
-              values: DailyLogLabels.pain,
-              selectedValue: _painLevel,
-              enabled: !_isSubmitting,
-              onChanged: (value) => setState(() => _painLevel = value),
-            ),
-            _LevelSelector(
-              title: 'Sleep quality',
-              icon: Icons.bedtime_outlined,
-              values: DailyLogLabels.sleep,
-              selectedValue: _sleepQuality,
-              enabled: !_isSubmitting,
-              onChanged: (value) => setState(() => _sleepQuality = value),
-            ),
-            _LevelSelector(
-              title: 'Stress',
-              icon: Icons.wb_sunny_outlined,
-              values: DailyLogLabels.stress,
-              selectedValue: _stressLevel,
-              enabled: !_isSubmitting,
-              onChanged: (value) => setState(() => _stressLevel = value),
+            const SizedBox(height: AppSpacing.xl),
+            AppSectionHeading(
+              title: l10n.logSymptoms,
+              subtitle: l10n.logSymptomsSubtitle,
+              action: _selectedSymptomTypeIds.isEmpty
+                  ? null
+                  : Text(
+                      l10n.logSymptomsSelected(_selectedSymptomTypeIds.length),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
             ),
             const SizedBox(height: AppSpacing.sm),
             _buildSymptomsSection(symptomTypes, relationships),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.xl),
+            AppSectionHeading(title: l10n.logNotes),
+            const SizedBox(height: AppSpacing.sm),
             TextField(
               controller: _notesController,
-              enabled: !_isSubmitting,
+              enabled: enabled,
               minLines: 3,
-              maxLines: 5,
+              maxLines: 6,
               maxLength: 1000,
+              textCapitalization: TextCapitalization.sentences,
               inputFormatters: [LengthLimitingTextInputFormatter(1000)],
-              decoration: const InputDecoration(
-                labelText: 'Notes (optional)',
+              decoration: InputDecoration(
+                hintText: l10n.logNotesHint,
                 alignLabelWithHint: true,
               ),
             ),
             if (_errorMessage != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                _errorMessage!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
+              const SizedBox(height: AppSpacing.sm),
+              InlineMessage(message: _errorMessage!),
             ],
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _isSubmitting || !symptomsReady ? null : _submit,
-              child: _isSubmitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(_isEditing ? 'Save changes' : 'Save daily log'),
-            ),
           ],
         ),
+      ),
+      bottomNavigationBar: _SaveBar(
+        label: _isEditing ? l10n.commonSaveChanges : l10n.logSave,
+        isSubmitting: _isSubmitting,
+        onPressed: _isSubmitting || !symptomsReady ? null : _submit,
       ),
     );
   }
@@ -326,6 +355,138 @@ class _DailyLogFormScreenState extends ConsumerState<DailyLogFormScreen> {
   }
 }
 
+class _DateHeader extends StatelessWidget {
+  const _DateHeader({
+    required this.date,
+    required this.enabled,
+    required this.onChange,
+  });
+
+  final DateTime date;
+  final bool enabled;
+  final VoidCallback onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final relative = Fmt.daysFromToday(date);
+    final eyebrow = switch (relative) {
+      0 => Fmt.upper(context.l10n.commonToday),
+      -1 => Fmt.upper(context.l10n.commonYesterday),
+      _ => Fmt.upper(Fmt.weekday(date)),
+    };
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                eyebrow,
+                style: AppTypography.eyebrow.copyWith(color: AppColors.primary),
+              ),
+              const SizedBox(height: AppSpacing.xxs),
+              Text(Fmt.date(date), style: textTheme.headlineSmall),
+            ],
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        OutlinedButton.icon(
+          onPressed: enabled ? onChange : null,
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(0, 40),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          ),
+          icon: const Icon(Icons.calendar_today_outlined, size: 16),
+          label: Text(context.l10n.commonChange),
+        ),
+      ],
+    );
+  }
+}
+
+class _FormSection extends StatelessWidget {
+  const _FormSection({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppSectionHeading(title: title),
+        const SizedBox(height: AppSpacing.sm),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: AppRadius.lgRadius,
+            border: Border.all(color: AppColors.outline),
+          ),
+          child: Column(
+            children: [
+              for (var i = 0; i < children.length; i++) ...[
+                if (i > 0) const Divider(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.sm,
+                  ),
+                  child: children[i],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SaveBar extends StatelessWidget {
+  const _SaveBar({
+    required this.label,
+    required this.isSubmitting,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool isSubmitting;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        border: Border(top: BorderSide(color: AppColors.divider)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            AppSpacing.sm,
+            AppSpacing.gutter,
+            AppSpacing.sm,
+          ),
+          child: FilledButton(
+            onPressed: onPressed,
+            child: isSubmitting
+                ? const ButtonSpinner(color: AppColors.primary)
+                : Text(label),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SymptomsSelector extends StatelessWidget {
   const _SymptomsSelector({
     required this.types,
@@ -341,30 +502,93 @@ class _SymptomsSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    if (types.isEmpty) {
+      return Text(
+        context.l10n.logNoSymptomTypes,
+        style: Theme.of(context).textTheme.bodyMedium,
+      );
+    }
+
+    return Wrap(
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xs,
       children: [
-        Text('Symptoms', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        if (types.isEmpty)
-          const Text('No symptom types are available.')
-        else
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: types
-                .map(
-                  (type) => FilterChip(
-                    label: Text(type.name),
-                    selected: selectedIds.contains(type.id),
-                    onSelected: enabled
-                        ? (selected) => onChanged(type.id, selected)
-                        : null,
-                  ),
-                )
-                .toList(),
+        for (final type in types)
+          _SymptomToggle(
+            label: type.name,
+            selected: selectedIds.contains(type.id),
+            onTap: enabled
+                ? () {
+                    HapticFeedback.selectionClick();
+                    onChanged(type.id, !selectedIds.contains(type.id));
+                  }
+                : null,
           ),
       ],
+    );
+  }
+}
+
+class _SymptomToggle extends StatelessWidget {
+  const _SymptomToggle({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Semantics(
+      button: true,
+      toggled: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Material(
+        color: selected ? AppColors.primarySoft : AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.smRadius,
+          side: BorderSide(
+            color: selected ? AppColors.primary : AppColors.outline,
+          ),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.smRadius,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: 10,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  selected ? Icons.check : Icons.add,
+                  size: 16,
+                  color: selected ? AppColors.primaryDark : AppColors.textMuted,
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: textTheme.labelMedium?.copyWith(
+                      color: selected
+                          ? AppColors.primaryDark
+                          : AppColors.textPrimary,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -374,17 +598,20 @@ class _SymptomsLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
         children: [
-          SizedBox(
-            height: 20,
-            width: 20,
+          const SizedBox(
+            height: 18,
+            width: 18,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
-          SizedBox(width: 12),
-          Text('Loading symptoms...'),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            context.l10n.logSymptomsLoading,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ],
       ),
     );
@@ -398,92 +625,21 @@ class _SymptomsError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        const Text('Symptoms could not be loaded. Please try again.'),
-        TextButton(onPressed: onRetry, child: const Text('Try again')),
+        const Icon(Icons.cloud_off_outlined, size: 18, color: AppColors.error),
+        const SizedBox(width: AppSpacing.xs),
+        Expanded(
+          child: Text(
+            context.l10n.logSymptomsError,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        TextButton(
+          onPressed: onRetry,
+          child: Text(context.l10n.commonTryAgain),
+        ),
       ],
-    );
-  }
-}
-
-class _LevelSelector extends StatelessWidget {
-  const _LevelSelector({
-    required this.title,
-    required this.icon,
-    required this.values,
-    required this.selectedValue,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  final String title;
-  final IconData icon;
-  final Map<int, String> values;
-  final int selectedValue;
-  final bool enabled;
-  final ValueChanged<int> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final keys = values.keys.toList()..sort();
-    final min = keys.first;
-    final max = keys.last;
-
-    return Card(
-      margin: const EdgeInsets.only(top: AppSpacing.sm),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
-          AppSpacing.sm,
-          AppSpacing.md,
-          AppSpacing.xs,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 18, color: AppColors.primaryDark),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-                Text(
-                  values[selectedValue] ?? '',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
-            Slider(
-              min: min.toDouble(),
-              max: max.toDouble(),
-              divisions: max - min == 0 ? null : max - min,
-              value: selectedValue.toDouble(),
-              onChanged: enabled
-                  ? (value) => onChanged(value.round())
-                  : null,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (final key in keys)
-                    Text(
-                      '$key',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

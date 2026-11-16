@@ -1,0 +1,225 @@
+{
+ "cycle": {
+  "cycle_lengths": [
+   29,
+   27,
+   30,
+   28,
+   31
+  ],
+  "average_length": 29,
+  "median_length": 29,
+  "variability": 1.5811388300841898,
+  "range": 4,
+  "consecutive_differences": [
+   2,
+   3,
+   2,
+   3
+  ],
+  "regularity": "regular",
+  "trend": {
+   "slope": 0.5,
+   "r_squared": 0.25,
+   "p_value": 0.3910022189557705
+  }
+ },
+ "bleeding": {
+  "period_duration": 10,
+  "average_level": 2.2,
+  "median_level": 2.0,
+  "peak_level": 4,
+  "intensity_score": 22
+ },
+ "phase": {
+  "cycle_day": 13,
+  "current_phase": "follicular",
+  "wellbeing": {
+   "menstrual": {
+    "mood": 2.6,
+    "pain": 2.1,
+    "sleep": 3.3,
+    "stress": 2.4
+   },
+   "follicular": {
+    "mood": 3.210526315789474,
+    "pain": 0.8421052631578947,
+    "sleep": 3.5789473684210527,
+    "stress": 2.473684210526316
+   },
+   "ovulatory": {
+    "mood": 4.0,
+    "pain": 0.0,
+    "sleep": 2.5,
+    "stress": 2.0
+   },
+   "luteal": {
+    "mood": 3.4482758620689653,
+    "pain": 0.8275862068965517,
+    "sleep": 3.586206896551724,
+    "stress": 2.3793103448275863
+   }
+  }
+ },
+ "predictions": {
+  "estimated_cycle_length": 29,
+  "next_period_date": "2026-11-21",
+  "ovulation_day": 15,
+  "ovulation_date": "2026-11-06",
+  "ovulation_window": {
+   "start_day": 12,
+   "end_day": 18
+  },
+  "confidence": {
+   "score": 0.6,
+   "tier": "medium"
+  }
+ },
+ "wellbeing": {
+  "mood": {
+   "average": 3.25,
+   "median": 3.0,
+   "minimum": 2,
+   "maximum": 5,
+   "trend": {
+    "slope": 0.0012503473186996387,
+    "r_squared": 0.0005283157684646361,
+    "p_value": 0.8616142481303015
+   }
+  },
+  "pain": {
+   "average": 1.0166666666666666,
+   "median": 1.0,
+   "minimum": 0,
+   "maximum": 4,
+   "trend": {
+    "slope": 0.002917477076965824,
+    "r_squared": 0.0022203558329167285,
+    "p_value": 0.7207058073733256
+   }
+  },
+  "sleep": {
+   "average": 3.5,
+   "median": 3.5,
+   "minimum": 2,
+   "maximum": 5,
+   "trend": {
+    "slope": 0.0008335648791330925,
+    "r_squared": 0.00022733587612720703,
+    "p_value": 0.908967721474555
+   }
+  },
+  "stress": {
+   "average": 2.4,
+   "median": 2.0,
+   "minimum": 1,
+   "maximum": 4,
+   "trend": {
+    "slope": 0.004001111419838844,
+    "r_squared": 0.004616667022890975,
+    "p_value": 0.6059708634877984
+   }
+  }
+ },
+ "symptoms": {
+  "5": {
+   "dates": [
+    "2026-09-06",
+    "2026-09-15",
+    "2026-09-24",
+    "2026-10-03",
+    "2026-10-12",
+    "2026-10-21",
+    "2026-10-30"
+   ],
+   "frequency": 7,
+   "occurrence_rate": 0.11666666666666667,
+   "phase_distribution": {
+    "menstrual": 1,
+    "follicular": 3,
+    "ovulatory": 0,
+    "luteal": 3
+   },
+   "most_common_phase": "follicular"
+  },
+  "3": {
+   "dates": [
+    "2026-09-17",
+    "2026-09-18",
+    "2026-09-19",
+    "2026-09-20",
+    "2026-09-21",
+    "2026-10-15",
+    "2026-10-16",
+    "2026-10-17",
+    "2026-10-18",
+    "2026-10-19",
+    "2026-10-20",
+    "2026-10-21",
+    "2026-10-22"
+   ],
+   "frequency": 13,
+   "occurrence_rate": 0.21666666666666667,
+   "phase_distribution": {
+    "menstrual": 0,
+    "follicular": 0,
+    "ovulatory": 0,
+    "luteal": 13
+   },
+   "most_common_phase": "luteal"
+  },
+  "1": {
+   "dates": [
+    "2026-09-22",
+    "2026-09-23",
+    "2026-10-23",
+    "2026-10-24"
+   ],
+   "frequency": 4,
+   "occurrence_rate": 0.06666666666666667,
+   "phase_distribution": {
+    "menstrual": 4,
+    "follicular": 0,
+    "ovulatory": 0,
+    "luteal": 0
+   },
+   "most_common_phase": "menstrual"
+  }
+ },
+ "correlations": {
+  "sleep_mood": {
+   "correlation": 0.07040762397787266,
+   "p_value": 0.5929494820807757
+  },
+  "stress_pain": {
+   "correlation": 0.18224697349197083,
+   "p_value": 0.1634125271291296
+  }
+ },
+ "insights": [
+  {
+   "type": "cycle_pattern",
+   "title": "Cycle pattern",
+   "message": "Your recorded cycle lengths appear relatively consistent.",
+   "priority": "low"
+  },
+  {
+   "type": "prediction",
+   "title": "Cycle prediction",
+   "message": "Your estimated cycle length is 29 days based on your recorded cycles.",
+   "priority": "medium"
+  },
+  {
+   "type": "bleeding_intensity",
+   "title": "Peak bleeding level",
+   "message": "You recorded a high bleeding level on at least one logged day.",
+   "priority": "low"
+  },
+  {
+   "type": "symptom_pattern",
+   "title": "Recurring symptoms",
+   "message": "Şişkinlik was recorded 13 times, most frequently during the luteal phase. Baş ağrısı was recorded 7 times, most frequently during the follicular phase. Karın krampları was recorded 4 times, most frequently during the menstrual phase.",
+   "priority": "low"
+  }
+ ]
+}

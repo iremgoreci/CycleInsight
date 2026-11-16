@@ -5,6 +5,8 @@ import '../data/models/symptom_type.dart';
 import '../data/services/daily_log_service.dart';
 import '../data/services/daily_log_symptom_service.dart';
 import '../data/services/symptom_type_service.dart';
+import 'analysis_provider.dart';
+import 'auth_provider.dart';
 
 final dailyLogProvider =
     AsyncNotifierProvider<DailyLogNotifier, List<DailyLog>>(
@@ -14,6 +16,7 @@ final dailyLogProvider =
 class DailyLogNotifier extends AsyncNotifier<List<DailyLog>> {
   @override
   Future<List<DailyLog>> build() {
+    ref.watch(authProvider.select((session) => session.user?.id));
     return _loadDailyLogs();
   }
 
@@ -42,6 +45,7 @@ class DailyLogNotifier extends AsyncNotifier<List<DailyLog>> {
           stressLevel: stressLevel,
           notes: notes,
         );
+    ref.invalidate(analysisProvider);
     await refresh();
     return dailyLog;
   }
@@ -68,11 +72,13 @@ class DailyLogNotifier extends AsyncNotifier<List<DailyLog>> {
           stressLevel: stressLevel,
           notes: notes,
         );
+    ref.invalidate(analysisProvider);
     await refresh();
   }
 
   Future<void> deleteDailyLog(int dailyLogId) async {
     await ref.read(dailyLogServiceProvider).deleteDailyLog(dailyLogId);
+    ref.invalidate(analysisProvider);
     await refresh();
   }
 

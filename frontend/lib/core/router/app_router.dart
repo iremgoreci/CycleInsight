@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/presentation/cycle_phase_style.dart';
 import '../../data/models/cycle.dart';
 import '../../data/models/daily_log.dart';
 import '../../screens/auth/login_screen.dart';
@@ -10,6 +11,7 @@ import '../../screens/cycles/cycle_form_screen.dart';
 import '../../screens/cycles/cycles_history_screen.dart';
 import '../../screens/daily_logs/daily_log_form_screen.dart';
 import '../../screens/learn/learn_about_cycle_screen.dart';
+import '../../screens/learn/phase_detail_screen.dart';
 import '../../screens/shell/app_shell_screen.dart';
 import '../../screens/splash/splash_screen.dart';
 import '../../state/auth_provider.dart';
@@ -75,6 +77,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/learn',
         builder: (context, state) => const LearnAboutCycleScreen(),
+      ),
+      GoRoute(
+        path: '/learn/:phase',
+        redirect: (context, state) =>
+            CyclePhaseKind.fromApi(state.pathParameters['phase']) == null
+            ? '/learn'
+            : null,
+        builder: (context, state) => PhaseDetailScreen(
+          phase: CyclePhaseKind.fromApi(state.pathParameters['phase'])!,
+        ),
       ),
       GoRoute(
         path: '/cycles/new',
